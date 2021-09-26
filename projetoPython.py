@@ -82,7 +82,7 @@ def receberInfoCliente(cpf, nome, numero, dataNascimento, plano, planosDisponive
     "saldo": 0,
     "minutoDisponivel": planosDisponiveis[plano]["minutosChamada"], 
     "internetDisponivel": planosDisponiveis[plano]["gigaInternet"],
-    "chamadas" : chamada  
+    "chamadas" : []  
     }
     return cliente
 
