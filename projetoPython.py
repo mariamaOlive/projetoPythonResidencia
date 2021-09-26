@@ -1,3 +1,9 @@
+from flask import Flask, render_template, session, redirect, url_for
+from flask_bootstrap import Bootstrap
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
+
 ### Projeto Residencia Python - Operadoras Telefonicas
 ### Lucas e Mariama
 
@@ -190,34 +196,42 @@ dici = {}
 # dici={cliente1["cpf"]: cliente1}
 lerArquivo(dici)
 opcao = 99
-while(opcao !=0):
-    imprimeMenu()
-    opcao = int(input())
-    if(opcao==1):
-        listarClientes(dici)
-    elif(opcao==2): 
-        cpf = input("Digite o CPF do cliente:")
-        nome = input("Digite oo nome do cliente:")
-        numero = input("Digite oo numero do cliente:")
-        data = input("Digite a data de nascimento do cliente dd/mm/aaaa: ")
-        plano = input("Digite o plano do cliente:")
-        cliente = receberInfoCliente(cpf, nome, numero, data, plano, dicPlanos)
-        inserirCliente(dici, cliente)
-    elif(opcao==3):
-        cpf = input("Digite o CPF do cliente para buscar:")
-        buscarCliente(dici, cpf)
-    elif(opcao==4):
-        cpf = input("Digite o CPF do cliente para atualizar:")
-        novoSaldo = float(input("Digite o novo saldo:"))
-        atualizaSaldo(dici, cpf, novoSaldo)
-    elif(opcao==5):
-        cpf = input("Digite o CPF do cliente para adicionar a chamada:")
-        chamada = input("Digite a chamada a ser adicionada:")
-        adicionarChamada(dici, cpf, chamada)
-    elif(opcao==6):
-        cpf = input("Digite o CPF do cliente para deletar:")
-        deletarCliente(dici, cpf)
-    #elif(opcao==7):
-    #    salvarArquivo(dici)
-    elif(opcao==0):
-        print("Fim da execução.")
+# while(opcao !=0):
+#     imprimeMenu()
+#     opcao = int(input())
+#     if(opcao==1):
+#         listarClientes(dici)
+#     elif(opcao==2): 
+#         cpf = input("Digite o CPF do cliente:")
+#         nome = input("Digite oo nome do cliente:")
+#         numero = input("Digite oo numero do cliente:")
+#         data = input("Digite a data de nascimento do cliente dd/mm/aaaa: ")
+#         plano = input("Digite o plano do cliente:")
+#         cliente = receberInfoCliente(cpf, nome, numero, data, plano, dicPlanos)
+#         inserirCliente(dici, cliente)
+#     elif(opcao==3):
+#         cpf = input("Digite o CPF do cliente para buscar:")
+#         buscarCliente(dici, cpf)
+#     elif(opcao==4):
+#         cpf = input("Digite o CPF do cliente para atualizar:")
+#         novoSaldo = float(input("Digite o novo saldo:"))
+#         atualizaSaldo(dici, cpf, novoSaldo)
+#     elif(opcao==5):
+#         cpf = input("Digite o CPF do cliente para adicionar a chamada:")
+#         chamada = input("Digite a chamada a ser adicionada:")
+#         adicionarChamada(dici, cpf, chamada)
+#     elif(opcao==6):
+#         cpf = input("Digite o CPF do cliente para deletar:")
+#         deletarCliente(dici, cpf)
+#     #elif(opcao==7):
+#     #    salvarArquivo(dici)
+#     elif(opcao==0):
+#         print("Fim da execução.")
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'hard to guess string'
+bootstrap = Bootstrap(app)
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    return render_template('index.html', clientes=listarClientes(dici))
