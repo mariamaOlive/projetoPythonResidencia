@@ -4,6 +4,25 @@
 {% block title %}Flasky{% endblock %}
 
 {% block page_content %}
+{# {% for cliente in clientes %}
+        <div  class="container">
+            <div class="row">
+                <div class="col-sm">
+                    One of three columns
+                </div>
+                <div class="col-sm">
+                    One of three columns
+                </div>
+                <div class="col-sm">
+                    One of three columns
+                </div>
+                <div class="col-sm">
+                    One of three columns
+                </div>
+            </div>
+        </div>
+{% endfor %} #}
+
 <table class="table table-hover" data-toggle="table">
   <thead>
     <tr>
@@ -11,10 +30,28 @@
       <th>Nome</th>
       <th>Telefone</th>
       <th>Plano</th>
+      <th>Data de nascimento</th>
     </tr>
   </thead>
   <tbody>
     {% for cliente in clientes %}
+        <div  class="container">
+            <div class="row">
+                <div class="col-sm">
+                    One of three columns
+                </div>
+                <div class="col-sm">
+                    One of three columns
+                </div>
+                <div class="col-sm">
+                    One of three columns
+                </div>
+                <div class="col-sm">
+                    One of three columns
+                </div>
+            </div>
+        </div>
+
 
         <tr data-toggle="collapse" data-target="#{{cliente.cpf}}">
             <td>
@@ -27,16 +64,24 @@
             <td> 
                 {{ cliente.plano }}
             </td>
-        </tr>
-        <div>
-        <tr >
-            <td class="hiddenRow">
-                <div id="{{cliente.cpf}}" class="collapse">
-                    {{ cliente.numero }}
-                </div>
+            <td> 
+                {{ cliente.nascimento }}
             </td>
         </tr>
-        </div>
+        <tr>
+            {# <td class="hiddenRow"> #}
+                <div id="{{cliente.cpf}}" class="container collapse">
+                    <div class="row">
+                        <div class="col-sm">
+                        One of three columns
+                        </div>
+                        <div class="col-sm">
+                        One of three columns
+                        </div>
+                    </div>
+                </div>
+            {# </td> #}
+        </tr>
     {% endfor %}
   </tbody>
 </table>
