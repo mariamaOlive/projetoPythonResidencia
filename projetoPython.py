@@ -34,6 +34,7 @@ dicPlanos = {"top10": plano1, "top20": plano1, "top50": plano1}
 cliente1 = {
     "cpf": "135134",
     "nome": "Maria Silva",
+    "numero": "41341234",
     "nascimento": "23/10/1950",
     "plano": "To mais 50GB",
     "saldo": 20,
@@ -45,6 +46,7 @@ cliente1 = {
 cliente2 = {
     "cpf": "111111",
     "nome": "Gabriel Silva",
+    "numero": "91234134",
     "nascimento": "23/10/1950",
     "plano": "To mais 50GB",
     "saldo": 20,
@@ -53,10 +55,6 @@ cliente2 = {
     "chamadas" : ["4313-414", "4123-4143"]  
 }
 
-
-
-
-#dicionarioCliente = {"135134": cliente1,"111111": cliente2}
 
 def listarClientes(dicionarioClientes):
     lista = []
@@ -73,11 +71,12 @@ def inserirCliente(dicionarioClientes, cliente):
     salvarArquivo(dicionarioClientes)
     #return Bool
     
-def receberInfoCliente(cpf, nome, dataNascimento, plano, planosDisponiveis): ### pega os inputs para usar em inserirCliente
+def receberInfoCliente(cpf, nome, numero, dataNascimento, plano, planosDisponiveis): ### pega os inputs para usar em inserirCliente
     ### recebe input com as informações do cliente e devolve um cliente
     cliente = {
     "cpf": cpf,
     "nome": nome,
+    "numero": numero,
     "nascimento": dataNascimento,
     "plano": plano,
     "saldo": 0,
@@ -128,6 +127,7 @@ def salvarArquivo(dicionarioClientes):
         stringArquivo = ""
         stringArquivo += info["nome"]+"\n"
         stringArquivo += info["cpf"]+"\n"
+        stringArquivo += info["numero"]+"\n"
         stringArquivo += info["nascimento"]+"\n"
         stringArquivo += str(info["saldo"])+"\n"
         stringArquivo += str(info["minutoDisponivel"])+"\n"
@@ -156,9 +156,10 @@ while(opcao !=0):
     elif(opcao==2): 
         cpf = input("Digite o CPF do cliente:")
         nome = input("Digite oo nome do cliente:")
+        numero = input("Digite oo numero do cliente:")
         data = input("Digite a data de nascimento do cliente dd/mm/aaaa: ")
         plano = input("Digite o plano do cliente:")
-        cliente = receberInfoCliente(cpf, nome, data, plano, dicPlanos)
+        cliente = receberInfoCliente(cpf, nome, numero, data, plano, dicPlanos)
         inserirCliente(dici, cliente)
     elif(opcao==3):
         cpf = input("Digite o CPF do cliente para buscar:")
