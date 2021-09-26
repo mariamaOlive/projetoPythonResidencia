@@ -234,4 +234,18 @@ bootstrap = Bootstrap(app)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html', clientes=listarClientes(dici))
+    form = NameForm()
+    cpf = form.cpf.data
+    if form.validate_on_submit():
+        if cpf=="todos":
+            return render_template('index.html', form =form,clientes=listarClientes(dici))
+        else:
+            clienteUnico = [buscarCliente(dici, cpf)]
+            return render_template('index.html', form =form, clientes=clienteUnico)
+
+    return render_template('index.html', form =form,clientes=listarClientes(dici))
+
+
+class NameForm(FlaskForm):
+    cpf = StringField('Digite o CPF', validators=[DataRequired()])
+    submit = SubmitField('Buscar')
