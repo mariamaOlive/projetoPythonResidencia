@@ -36,7 +36,7 @@ cliente1 = {
     "nome": "Maria Silva",
     "numero": "41341234",
     "nascimento": "23/10/1950",
-    "plano": "To mais 50GB",
+    "plano": "top50",
     "saldo": 20,
     "minutoDisponivel":100, 
     "internetDisponivel":4000,
@@ -48,7 +48,7 @@ cliente2 = {
     "nome": "Gabriel Silva",
     "numero": "91234134",
     "nascimento": "23/10/1950",
-    "plano": "To mais 50GB",
+    "plano": "top50",
     "saldo": 20,
     "minutoDisponivel":100, 
     "internetDisponivel":4000,
@@ -80,9 +80,24 @@ def receberInfoCliente(cpf, nome, numero, dataNascimento, plano, planosDisponive
     "nascimento": dataNascimento,
     "plano": plano,
     "saldo": 0,
-    "minutoDisponivel":planosDisponiveis[plano]["minutosChamada"], 
-    "internetDisponivel":planosDisponiveis[plano]["gigaInternet"],
-    "chamadas" : []  
+    "minutoDisponivel": planosDisponiveis[plano]["minutosChamada"], 
+    "internetDisponivel": planosDisponiveis[plano]["gigaInternet"],
+    "chamadas" : chamada  
+    }
+    return cliente
+
+def lerCliente(cpf, nome, numero, dataNascimento, plano, saldo, minutoDisponivel, internetDisponivel, chamadas): ### pega os inputs para usar em inserirCliente
+    ### recebe input com as informações do cliente e devolve um cliente
+    cliente = {
+    "cpf": cpf,
+    "nome": nome,
+    "numero": numero,
+    "nascimento": dataNascimento,
+    "plano": plano,
+    "saldo": saldo,
+    "minutoDisponivel": minutoDisponivel, 
+    "internetDisponivel": internetDisponivel,
+    "chamadas" : chamadas  
     }
     return cliente
 
@@ -129,6 +144,7 @@ def salvarArquivo(dicionarioClientes):
         stringArquivo += info["cpf"]+"\n"
         stringArquivo += info["numero"]+"\n"
         stringArquivo += info["nascimento"]+"\n"
+        stringArquivo += info["plano"]+"\n"
         stringArquivo += str(info["saldo"])+"\n"
         stringArquivo += str(info["minutoDisponivel"])+"\n"
         stringArquivo += str(info["internetDisponivel"])+"\n"
@@ -141,12 +157,38 @@ def salvarArquivo(dicionarioClientes):
     
     arquivo.close()
 
-       
-#def lerArquivo():
-#    arquivo = open("listaClientes.txt", "r")
-    
 
-dici={cliente1["cpf"]: cliente1}
+
+def lerArquivo(dicClientes):
+    arquivo = open("listaClientes.txt", "r")
+    linhas = arquivo.readlines()
+    cont = 0
+
+    while cont<=(len(linhas)-1):
+        nome = linhas[cont].strip()
+        cpf = linhas[cont+1].strip()
+        numero = linhas[cont+2].strip()
+        dataNascimento = linhas[cont+3].strip()
+        plano = linhas[cont+4].strip()
+        saldo = linhas[cont+5].strip()
+        minutoDisponivel = linhas[cont+6].strip()
+        internetDisponivel = linhas[cont+7].strip()
+        cont+=9
+        chamadas = []
+        while linhas[cont]!="]\n":
+            chamadas.append(linhas[cont].strip())
+            cont+=1
+        cont+=1
+        
+        cliente = lerCliente(cpf, nome, numero, dataNascimento, plano, saldo, minutoDisponivel, internetDisponivel, chamadas)
+        dicClientes[cpf] = cliente
+
+    return dicClientes
+
+    
+dici = {}
+# dici={cliente1["cpf"]: cliente1}
+lerArquivo(dici)
 opcao = 99
 while(opcao !=0):
     imprimeMenu()
