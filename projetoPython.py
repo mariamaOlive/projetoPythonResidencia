@@ -228,6 +228,14 @@ opcao = 99
 #     elif(opcao==0):
 #         print("Fim da execução.")
 
+def buscarPlanos():
+    planos = []
+    for plano in dicPlanos.keys():
+        planos.append(plano)
+    
+    print("----->",planos)
+    return planos
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
 bootstrap = Bootstrap(app)
@@ -235,13 +243,23 @@ bootstrap = Bootstrap(app)
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        cpf = request.form['cpf']
+        cpf = request.form["cpf"]
         if cpf=="":
-            return render_template('index.html',clientes=listarClientes(dici))
+            return render_template('index.html',clientes=listarClientes(dici), planos = buscarPlanos())
         else:
             clienteUnico = [buscarCliente(dici, cpf)]
-            return render_template('index.html', clientes=clienteUnico)
+            return render_template('index.html', clientes=clienteUnico, planos = buscarPlanos())
 
-    return render_template('index.html',clientes=listarClientes(dici))
+    return render_template('index.html',clientes=listarClientes(dici), planos = buscarPlanos())
 
-
+@app.route('/inserir', methods=['POST'])
+def inserir():
+    cliente = receberInfoCliente(
+                request.form["novoCpf"],
+                request.form["novoNome"], 
+                request.form["novoNumero"], 
+                request.form["novoData"], 
+                request.form["radioPlano"], 
+                dicPlanos)
+    inserirCliente(dici, cliente)
+    return redirect(url_for('index'))
