@@ -6,10 +6,16 @@
       href="{{url_for('.static', filename='style.css')}}">
 {% endblock %}
 
-{% block title %}Flasky{% endblock %}
+{% block title %}Bulba{% endblock %}
 {% block navbar %}
     <nav class="navbar navbar-dark bg-dark">
-        <span class="navbar-brand mb-0 h1">Sistema pré-pago</span>
+        <span class="navbar-brand" href="#">
+            <img src="/static/bulba.jpeg" width="30" height="30" class="d-inline-block align-top rounded" alt="">
+            Bulba Pré-pago
+            <span class="navbar-text">
+                ...carregue quando puder
+            </span>
+        </span>
     </nav>
 {% endblock %}
 {% block content %}
