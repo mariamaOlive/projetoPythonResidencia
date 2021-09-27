@@ -232,9 +232,8 @@ def buscarPlanos():
     planos = []
     for plano in dicPlanos.keys():
         planos.append(plano)
-    
-    print("----->",planos)
     return planos
+    
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
