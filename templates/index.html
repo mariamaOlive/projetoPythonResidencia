@@ -28,16 +28,17 @@
 </div> #}
 
 
-<form action="" method="post">
-    {{ form.hidden_tag() }}
-    {{form.cpf.label(class="mt-4")}}
+<form action="" method="POST">
+    <label class="mt-4" for="input-cpf">Buscar cliente</label>
     <div class="input-group mb-4">
-        {{form.cpf(class="form-control")}}
+        <input class="form-control" id="input-cpf" placeholder="Digite cpf" name="cpf">
         <div class="input-group-append">
-        {{form.submit(class="btn btn-secondary")}}
+                <button type="submit" class="btn btn-secondary">Submit</button>
         </div>
     </div>
-</form>
+</form> 
+
+
 
 
 <table class="table table-hover" data-toggle="table">

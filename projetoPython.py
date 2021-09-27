@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
@@ -234,18 +234,25 @@ bootstrap = Bootstrap(app)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    form = NameForm()
-    cpf = form.cpf.data
-    if form.validate_on_submit():
-        if cpf=="todos":
-            return render_template('index.html', form =form,clientes=listarClientes(dici))
+    if request.method == 'POST':
+        cpf = request.form['cpf']
+        if cpf=="":
+            return render_template('index.html',clientes=listarClientes(dici))
         else:
             clienteUnico = [buscarCliente(dici, cpf)]
-            return render_template('index.html', form =form, clientes=clienteUnico)
+            return render_template('index.html', clientes=clienteUnico)
 
-    return render_template('index.html', form =form,clientes=listarClientes(dici))
+    return render_template('index.html',clientes=listarClientes(dici))
 
 
-class NameForm(FlaskForm):
+class CpfForm(FlaskForm):
     cpf = StringField('Digite o CPF', validators=[DataRequired()])
     submit = SubmitField('Buscar')
+
+class NovoClienteForm(FlaskForm):
+    cpf = StringField('cpf', validators=[DataRequired()])
+    nome = StringField('nome', validators=[DataRequired()])
+    telefone = StringField('telefone', validators=[DataRequired()])
+    dataNascimento = StringField('dataNascimento', validators=[DataRequired()])
+    plano = StringField('plano', validators=[DataRequired()])
+    submit = SubmitField('Submeter')
