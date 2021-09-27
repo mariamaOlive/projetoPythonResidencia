@@ -3,6 +3,7 @@ from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
+#import matplotlib.pyplot
 
 ### Projeto Residencia Python - Operadoras Telefonicas
 ### Lucas e Mariama
@@ -193,7 +194,29 @@ def lerArquivo(dicClientes):
 
     return dicClientes
 
-    
+### Graficos
+
+#def graficoPlanos(dicionarioClientes):
+#    cont10=0
+#    cont20=0
+#    cont50=0
+#    for info in dicionarioClientes.values():
+#        if (info["plano"]=="top10"):
+#            cont10+=1
+#        elif (info["plano"]=="top20"):
+#            cont20+=1
+#        elif (info["plano"]=="top50"):
+#            cont50+=1
+#
+ #   x = ["Top 10", "Top 20", "Top 50"]
+ #   y = [cont10, cont20, cont30]
+#
+#    plt.bar(x, y, color='red', label='Grafico de barras dos planos telefônicos')
+#    plt.legend()
+#    plt.show()
+
+
+
 dici = {}
 # dici={cliente1["cpf"]: cliente1}
 lerArquivo(dici)
@@ -264,3 +287,8 @@ def inserir():
                 dicPlanos)
     inserirCliente(dici, cliente)
     return redirect(url_for('index'))
+
+
+
+
+
