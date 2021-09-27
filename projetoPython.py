@@ -36,7 +36,7 @@ plano3 = {
     "gigaInternet":25
 }
 
-dicPlanos = {"top10": plano1, "top20": plano1, "top50": plano1}
+dicPlanos = {"top10": plano1, "top20": plano2, "top50": plano3}
 
 cliente1 = {
     "cpf": "135134",
@@ -253,6 +253,12 @@ opcao = 99
 #     elif(opcao==0):
 #         print("Fim da execução.")
 
+
+
+##Variáveis de interface
+infoUsuarioLabels = ["CPF", "Nome", "Plano", "Data de Nascimento", ""]
+
+##Funções auxiliares para interface
 def buscarPlanos():
     planos = []
     for plano in dicPlanos.keys():
@@ -260,6 +266,7 @@ def buscarPlanos():
     return planos
 
 
+##Carregamento da interface
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
 bootstrap = Bootstrap(app)
@@ -269,12 +276,12 @@ def index():
     if request.method == 'POST':
         cpf = request.form["cpf"]
         if cpf=="":
-            return render_template('index.html',clientes=listarClientes(dici), planos = buscarPlanos())
+            return render_template('index.html',clientes=listarClientes(dici), planos = buscarPlanos(), usuarioLabel = infoUsuarioLabels)
         else:
             clienteUnico = [buscarCliente(dici, cpf)]
-            return render_template('index.html', clientes=clienteUnico, planos = buscarPlanos())
+            return render_template('index.html', clientes=clienteUnico, planos = buscarPlanos(), usuarioLabel = infoUsuarioLabels)
 
-    return render_template('index.html',clientes=listarClientes(dici), planos = buscarPlanos())
+    return render_template('index.html',clientes=listarClientes(dici), planos = buscarPlanos(), usuarioLabel = infoUsuarioLabels)
 
 @app.route('/inserir', methods=['POST'])
 def inserir():

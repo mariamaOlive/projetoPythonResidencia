@@ -3,30 +3,8 @@
 
 
 {% block page_content %}
-{# {% for cliente in clientes %}
-        <div  class="container">
-            <div class="row">
-                <div class="col-sm">
-                    One of three columns
-                </div>
-                <div class="col-sm">
-                    One of three columns
-                </div>
-                <div class="col-sm">
-                    One of three columns
-                </div>
-                <div class="col-sm">
-                    One of three columns
-                </div>
-            </div>
-        </div>
-{% endfor %} #}
-{# Search bar #}
-{# <div class="container">
-    {{ wtf.quick_form(form) }}
-</div> #}
 
-
+{# Form que busca cliente #}
 <form action="" method="POST">
     <label class="mt-4" for="input-cpf">Buscar cliente</label>
     <div class="input-group mb-4">
@@ -38,12 +16,105 @@
 </form> 
 
 
-<!-- Button trigger modal -->
+{# Botão que dispara modal de cadastro de cliente #}
 <button type="button" class="btn btn-secondary mb-4" data-toggle="modal" data-target="#exampleModal">
   Cadastrar cliente
 </button>
 
-<!-- Modal -->
+
+{# Lista de clientes #}
+<div>
+<div  class="container mb-2">
+    <div class="row">
+        {% for label in usuarioLabel %}
+            <div class="col-sm">
+                {{ label }}
+            </div>
+        {% endfor %} 
+    </div>
+</div>
+{% for cliente in clientes %}
+    <div id="accordion">
+    <div class="card mb-1" >
+        <div class="card-header" id="headingOne">
+        <h5 class="mb-0">
+            <div class="" data-toggle="collapse" data-target="#{{cliente.cpf}}" aria-expanded="true" aria-controls="{{cliente.cpf}}">
+                <div  class="container">
+                    <div class="row">
+                        <div class="col-sm">
+                            {{ cliente.cpf }}
+                        </div>
+                        <div class="col-sm">
+                            {{ cliente.nome }}
+                        </div>
+                        <div class="col-sm">
+                             {{ cliente.plano }}
+                        </div>
+                        <div class="col-sm">
+                             {{ cliente.nascimento }}
+                        </div>
+                        <div class="col-sm">
+                             <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Opções
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#" onclick="event.stopPropagation();">Deletar</a>
+                                    <a class="dropdown-item" href="#" onclick="event.stopPropagation();">Adicionar saldo</a>
+                                    <a class="dropdown-item" href="#" onclick="event.stopPropagation();">Adicionar chamada</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h5>
+        </div>
+
+        <div id="{{cliente.cpf}}" class="collapse" aria-labelledby="heading{{cliente.cpf}}" data-parent="#accordion">
+        <div class="card-body">
+            <div  class="container">
+                    <div class="row mb-3">
+                        <div class="col-sm">
+                            Saldo: {{ cliente.saldo }}
+                        </div>
+                        <div class="col-sm">
+                           
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm">
+                             Minutos disponíveis: {{ cliente.minutoDisponivel }} min
+                        </div>
+                        <div class="col-sm">
+                            Internet disponível: {{ cliente.internetDisponivel }} GB
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm">
+                            <div>
+                                Chamadas realizadas:
+                            </div>
+                            {% for chamada in cliente.chamadas %}
+                                <div>
+                                    {{chamada}}
+                                </div>
+                            {% endfor %} 
+                        </div>
+                        <div class="col-sm">
+                      
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %} 
+</div>
+
+
+
+{# Modal de cadatro de cliente #}
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -89,51 +160,5 @@
   </div>
 </div>
 
-{# Tabela com clientes #}
-<table class="table table-hover" data-toggle="table">
-  <thead>
-    <tr>
-      <th>Cpf</th>
-      <th>Nome</th>
-      <th>Telefone</th>
-      <th>Plano</th>
-      <th>Data de nascimento</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for cliente in clientes %}
-
-        <tr data-toggle="collapse" data-target="#{{cliente.cpf}}">
-            <td>
-                {{ cliente.cpf }}
-            </td>
-            <td>
-                {{ cliente.nome }}
-            </td>
-            <td>{{ cliente.numero }}</td>
-            <td> 
-                {{ cliente.plano }}
-            </td>
-            <td> 
-                {{ cliente.nascimento }}
-            </td>
-        </tr>
-        <tr>
-            {# <td class="hiddenRow"> #}
-                <div id="{{cliente.cpf}}" class="container collapse">
-                    <div class="row">
-                        <div class="col-sm">
-                        One of three columns
-                        </div>
-                        <div class="col-sm">
-                        One of three columns
-                        </div>
-                    </div>
-                </div>
-            {# </td> #}
-        </tr>
-    {% endfor %}
-  </tbody>
-</table>
 
 {% endblock %}
