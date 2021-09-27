@@ -72,13 +72,14 @@
                 <label for="input-data">Data de Nascimento</label>
                 <input class="form-control" id="input-data"  placeholder="dd/mm/aaaa" name="novoData">
             </div>
+         
             {% for plano in planos %}
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="radioPlano" id="{{plano}}" value="{{plano}}">
                     <label class="form-check-label" for="{{plano}}">{{plano}}</label>
                 </div>
             {% endfor %}
-            
+            <div class="mb-3"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                 <button type="submit" class="btn btn-primary" >Cadastrar</button>
