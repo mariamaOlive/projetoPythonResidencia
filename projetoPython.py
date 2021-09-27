@@ -245,14 +245,3 @@ def index():
     return render_template('index.html',clientes=listarClientes(dici))
 
 
-class CpfForm(FlaskForm):
-    cpf = StringField('Digite o CPF', validators=[DataRequired()])
-    submit = SubmitField('Buscar')
-
-class NovoClienteForm(FlaskForm):
-    cpf = StringField('cpf', validators=[DataRequired()])
-    nome = StringField('nome', validators=[DataRequired()])
-    telefone = StringField('telefone', validators=[DataRequired()])
-    dataNascimento = StringField('dataNascimento', validators=[DataRequired()])
-    plano = StringField('plano', validators=[DataRequired()])
-    submit = SubmitField('Submeter')
