@@ -109,9 +109,11 @@ def lerCliente(cpf, nome, numero, dataNascimento, plano, saldo, minutoDisponivel
 
 def buscarCliente(dicionarioClientes, cpf):
     ###Busca cliente de acordo com o cpf
-    cliente = dicionarioClientes[cpf]
-    print(cliente)
-    return cliente
+    try: 
+        cliente = dicionarioClientes[cpf]
+        return cliente
+    except:
+        return []
 
 def atualizaSaldo(dicionarioClientes, cpf, novoSaldo):
     dicionarioClientes[cpf]["saldo"] = novoSaldo
@@ -233,7 +235,7 @@ def buscarPlanos():
     for plano in dicPlanos.keys():
         planos.append(plano)
     return planos
-    
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
