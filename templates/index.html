@@ -3,6 +3,7 @@
 
 
 {% block page_content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
 {# Form que busca cliente #}
 <form action="" method="POST">
@@ -24,92 +25,94 @@
 
 {# Lista de clientes #}
 <div>
-<div  class="container mb-2">
-    <div class="row">
-        {% for label in usuarioLabel %}
-            <div class="col-sm">
-                {{ label }}
-            </div>
-        {% endfor %} 
+    <div  class="container mb-2">
+        <div class="row">
+            {% for label in usuarioLabel %}
+                <div class="col-sm">
+                    {{ label }}
+                </div>
+            {% endfor %} 
+        </div>
     </div>
-</div>
-{% for cliente in clientes %}
-    <div id="accordion">
-    <div class="card mb-1" >
-        <div class="card-header" id="headingOne">
-        <h5 class="mb-0">
-            <div class="" data-toggle="collapse" data-target="#{{cliente.cpf}}" aria-expanded="true" aria-controls="{{cliente.cpf}}">
-                <div  class="container">
-                    <div class="row">
-                        <div class="col-sm">
-                            {{ cliente.cpf }}
-                        </div>
-                        <div class="col-sm">
-                            {{ cliente.nome }}
-                        </div>
-                        <div class="col-sm">
-                             {{ cliente.plano }}
-                        </div>
-                        <div class="col-sm">
-                             {{ cliente.nascimento }}
-                        </div>
-                        <div class="col-sm">
-                             <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Opções
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="#" onclick="event.stopPropagation();">Deletar</a>
-                                    <a class="dropdown-item" href="#" onclick="event.stopPropagation();">Adicionar saldo</a>
-                                    <a class="dropdown-item" href="#" onclick="event.stopPropagation();">Adicionar chamada</a>
-                                </div>
+    {% for cliente in clientes %}
+        <div id="accordion">
+        <div class="card mb-1" >
+            <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+                <div class="" data-toggle="collapse" data-target="#{{cliente.cpf}}" aria-expanded="true" aria-controls="{{cliente.cpf}}">
+                    <div  class="container">
+                        <div class="row">
+                            <div class="col-sm">
+                                {{ cliente.cpf }}
+                            </div>
+                            <div class="col-sm">
+                                {{ cliente.nome }}
+                            </div>
+                            <div class="col-sm">
+                                {{ cliente.plano }}
+                            </div>
+                            <div class="col-sm">
+                                {{ cliente.nascimento }}
+                            </div>
+                            <div class="col-sm">
+                                <form action='/' , method='POST'>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Opções
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                            <button class="dropdown-item" type="submit" name="deletar" value="{{cliente.cpf}}" onclick="event.stopPropagation();">Deletar</button>
+                                            <button class="dropdown-item adicionarSaldo" type="button" name="adicionarSaldo" value="{{cliente.cpf}}" onclick="event.stopPropagation();">Adicionar saldo</button>
+                                            <button class="dropdown-item adicionarChamada" type="button" name="adicionarChamada" value="{{cliente.cpf}}" onclick="event.stopPropagation();" >Adicionar chamada</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
+            </h5>
             </div>
-        </h5>
-        </div>
 
-        <div id="{{cliente.cpf}}" class="collapse" aria-labelledby="heading{{cliente.cpf}}" data-parent="#accordion">
-        <div class="card-body">
-            <div  class="container">
-                    <div class="row mb-3">
-                        <div class="col-sm">
-                            Saldo: {{ cliente.saldo }}
-                        </div>
-                        <div class="col-sm">
-                           
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-sm">
-                             Minutos disponíveis: {{ cliente.minutoDisponivel }} min
-                        </div>
-                        <div class="col-sm">
-                            Internet disponível: {{ cliente.internetDisponivel }} GB
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-sm">
-                            <div>
-                                Chamadas realizadas:
+            {# Card escondido de informação do cliente #}
+            <div id="{{cliente.cpf}}" class="collapse" aria-labelledby="heading{{cliente.cpf}}" data-parent="#accordion">
+            <div class="card-body">
+                <div  class="container">
+                        <div class="row mb-3">
+                            <div class="col-sm">
+                                Saldo: {{ cliente.saldo }}
                             </div>
-                            {% for chamada in cliente.chamadas %}
-                                <div>
-                                    {{chamada}}
-                                </div>
-                            {% endfor %} 
+                            <div class="col-sm">
+                            
+                            </div>
                         </div>
-                        <div class="col-sm">
-                      
+                        <div class="row mb-3">
+                            <div class="col-sm">
+                                Minutos disponíveis: {{ cliente.minutoDisponivel }} min
+                            </div>
+                            <div class="col-sm">
+                                Internet disponível: {{ cliente.internetDisponivel }} GB
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm">
+                                <div>
+                                    Chamadas realizadas:
+                                </div>
+                                {% for chamada in cliente.chamadas %}
+                                    <div>
+                                        {{chamada}}
+                                    </div>
+                                {% endfor %} 
+                            </div>
+                            <div class="col-sm">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-{% endfor %} 
+    {% endfor %} 
 </div>
 
 
@@ -160,5 +163,41 @@
   </div>
 </div>
 
+
+{# Modal para Adicionar saldo / chamada #}
+<div class="modal fade" id="empModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Atualizar saldo</h4>
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+            </div>
+        
+        </div>
+    </div>
+</div>
+
+
+{# Jquery script para modal #}
+<script type='text/javascript'>
+    $(document).ready(function(){
+        $('.adicionarSaldo, .adicionarChamada').click(function(){
+            var cpf = $(this).val();
+            var tipoAcao = $(this).attr("class").split(' ')[1];
+            $.ajax({
+                url: '/ajaxfile',
+                type: 'post',
+                data: {cpf: cpf, tipoAcao: tipoAcao},
+                success: function(data){ 
+                    $('.modal-body').html(data); 
+                    $('.modal-body').append(data.htmlresponse);
+                    $('#empModal').modal('show'); 
+                }
+            });
+        });
+    });
+</script>
 
 {% endblock %}

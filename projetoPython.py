@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
@@ -274,12 +274,19 @@ bootstrap = Bootstrap(app)
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        cpf = request.form["cpf"]
-        if cpf=="":
-            return render_template('index.html',clientes=listarClientes(dici), planos = buscarPlanos(), usuarioLabel = infoUsuarioLabels)
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>(1)")
+        print(request.form)
+
+        opcao = list(request.form.keys())
+        if('deletar' in opcao or 'adicionarSaldo' in opcao or 'adicionarChamada' in opcao):
+            if(opcao[0]=='deletar'):
+                deletarCliente(dici, request.form['deletar'])
+
         else:
-            clienteUnico = [buscarCliente(dici, cpf)]
-            return render_template('index.html', clientes=clienteUnico, planos = buscarPlanos(), usuarioLabel = infoUsuarioLabels)
+            cpf = request.form["cpf"]
+            if cpf!="":
+                clienteUnico = [buscarCliente(dici, cpf)]
+                return render_template('index.html', clientes=clienteUnico, planos = buscarPlanos(), usuarioLabel = infoUsuarioLabels)
 
     return render_template('index.html',clientes=listarClientes(dici), planos = buscarPlanos(), usuarioLabel = infoUsuarioLabels)
 
@@ -294,6 +301,39 @@ def inserir():
                 dicPlanos)
     inserirCliente(dici, cliente)
     return redirect(url_for('index'))
+
+@app.route('/alterarCliente', methods=['POST'])
+def alterar():
+    print(request.form["cpf"])
+    return redirect(url_for('index'))
+
+@app.route('/alterarSaldo', methods=['POST'])
+def alterarSaldo():
+    print(">>>>>>>>>>>", request.form)
+    cpf = request.form["cpf"]
+    novoSaldo = request.form["novoSaldo"]
+    atualizaSaldo(dici, cpf,novoSaldo)
+
+    return redirect(url_for('index'))
+
+@app.route('/adicionarChamada', methods=['POST'])
+def inserirChamada():
+    print(">>>>>>>>>>>", request.form)
+    cpf = request.form["cpf"]
+    novoNumero = request.form["novoNumero"]
+    adicionarChamada(dici, cpf, novoNumero)
+
+    return redirect(url_for('index'))
+
+
+@app.route("/ajaxfile",methods=["POST","GET"])
+def ajaxfile():
+    if request.method == 'POST':
+        print(">>>>>>>>>>>", request.form)
+        cpf = request.form['cpf']
+        tipoAcao = request.form['tipoAcao']
+        print(cpf)
+    return jsonify({'htmlresponse': render_template('modal.html',cpf=cpf, tipoAcao=tipoAcao)})
 
 
 

@@ -1,0 +1,25 @@
+<div class="form-group">
+   {% if tipoAcao=="adicionarChamada" %} 
+        <form action="/adicionarChamada" method="POST">
+            <label for="input-nome">Nova chamada</label>
+            <input type="hidden" name="cpf" value={{cpf}}> 
+            <input class="form-control" id="input-chamada"  placeholder="Digite número chamado" name="novoNumero">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <button type="submit" class="btn btn-primary" >Salvar</button>
+            </div>
+        </form>
+    {% endif %}
+    {% if tipoAcao=="adicionarSaldo" %} 
+        <form action="/alterarSaldo" method="POST">
+            <label for="input-nome">Novo Saldo</label>
+            <input type="hidden" name="cpf" value={{cpf}}> 
+            <input class="form-control" id="input-saldo"  placeholder="Digite saldo" name="novoSaldo">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <button type="submit" class="btn btn-primary" >Salvar</button>
+            </div>
+        </form>
+    {% endif %}
+    
+</div>
