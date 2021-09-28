@@ -3,7 +3,10 @@ from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
-#import matplotlib.pyplot
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy
+import numpy as np
 
 ### Projeto Residencia Python - Operadoras Telefonicas
 ### Lucas e Mariama
@@ -141,6 +144,7 @@ def imprimeMenu():
     print("5 - Adicionar chamada")
     print("6 - Deletar cliente")
     #print("7 - Salvar arquivo")
+    print("8 - Gráficos")
     print("0 - Fim da execução")
 
 
@@ -196,24 +200,126 @@ def lerArquivo(dicClientes):
 
 ### Graficos
 
-#def graficoPlanos(dicionarioClientes):
-#    cont10=0
-#    cont20=0
-#    cont50=0
-#    for info in dicionarioClientes.values():
-#        if (info["plano"]=="top10"):
-#            cont10+=1
-#        elif (info["plano"]=="top20"):
-#            cont20+=1
-#        elif (info["plano"]=="top50"):
-#            cont50+=1
-#
- #   x = ["Top 10", "Top 20", "Top 50"]
- #   y = [cont10, cont20, cont30]
-#
-#    plt.bar(x, y, color='red', label='Grafico de barras dos planos telefônicos')
-#    plt.legend()
-#    plt.show()
+def graficoPlanos(dicionarioClientes):
+    cont10=0
+    cont20=0
+    cont50=0
+    for info in dicionarioClientes.values():
+        if (info["plano"]=="top10"):
+            cont10+=1
+        elif (info["plano"]=="top20"):
+            cont20+=1
+        elif (info["plano"]=="top50"):
+            cont50+=1
+
+    x = ["Top 10", "Top 20", "Top 50"]
+    y = [cont10, cont20, cont50]
+
+    plt.bar(x, y, color='red', label='Grafico de barras dos planos telefônicos')
+    plt.xlabel("Planos telefônicos")
+    plt.ylabel("Quantidade")
+    #plt.title("Grafico de barras dos planos telefônicos")
+    plt.legend()
+    plt.show()
+
+def graficoPlanosPie(dicionarioClientes):
+    cont10=0
+    cont20=0
+    cont50=0
+    for info in dicionarioClientes.values():
+        if (info["plano"]=="top10"):
+            cont10+=1
+        elif (info["plano"]=="top20"):
+            cont20+=1
+        elif (info["plano"]=="top50"):
+            cont50+=1
+
+    planos = ["Top 10", "Top 20", "Top 50"]
+    count = [cont10, cont20, cont50]
+
+    cores = ["paleturquoise", "darkred", "khaki"]
+    # Criando um gráfico
+    plt.pie(count, labels = planos, colors = cores, startangle = 90, shadow = True)
+    plt.show()
+
+def graficoIdadeSaldo(dicionarioClientes):
+    idades = []
+    saldos = []
+    for info in dicionarioClientes.values():
+        idades.append(int(info["nascimento"])) #implementar calculo da idade
+        saldos.append(float(info["saldo"])) ### tirar o float() pra testar
+    #idades.sort()
+    plt.scatter(idades, saldos, color='red', label='Grafico de dispersão da idade e saldo')
+    plt.xlabel("Idade")
+    plt.ylabel("Saldo")
+    plt.legend()
+    plt.show()
+
+def graficoPlanosIdade(dicionarioClientes):
+  planos = ["Top 10", "Top 20", "Top 50"] #X = ['Group A','Group B','Group C','Group D']
+  
+
+  cont10a = cont20a = cont50a = cont10b = cont20b = cont50b = cont10c = cont20c = cont50c = 0
+
+  for info in dicionarioClientes.values():
+       if (info["plano"]=="top10"):
+           if (int(info["nascimento"])<=30):
+             cont10a+=1
+           elif (int(info["nascimento"])<=60 and int(info["nascimento"])>30):
+             cont10b+=1
+           elif (int(info["nascimento"])>60):
+             cont10c+=1
+       elif (info["plano"]=="top20"):
+           if (int(info["nascimento"])<=30):
+             cont20a+=1
+           elif (int(info["nascimento"])<=60 and int(info["nascimento"])>30):
+             cont20b+=1
+           elif (int(info["nascimento"])>60):
+             cont20c+=1
+       elif (info["plano"]=="top50"):
+           if (int(info["nascimento"])<=30):
+             cont50a+=1
+           elif (int(info["nascimento"])<=60 and int(info["nascimento"])>30):
+             cont50b+=1
+           elif (int(info["nascimento"])>60):
+             cont50c+=1
+
+  conta = [cont10a, cont20a, cont50a]
+  contb = [cont10b, cont20b, cont50b]
+  contc = [cont10c, cont50c, cont50c]
+
+
+  X_axis = np.arange(len(planos))
+  
+  #plt.bar(X_axis - 0.8, conta, 0.4, label = "Até 30")
+  #plt.bar(X_axis + 0.8 , contb, 0.4, label = "30-60")
+  #plt.bar(X_axis + 0.8, contc, 0.4, label = "60+")
+  #plt.xticks(X_axis, planos)
+  #plt.xlabel("Planos")
+  #plt.ylabel("Quantidade")
+  #plt.title("Gráfico...")
+  #plt.legend()
+  #plt.show()
+
+  width = 0.25
+
+  plt.bar(X_axis, conta, #color = 'b',
+        width = width, edgecolor = 'black',
+        label='Até 30 anos')
+  plt.bar(X_axis + width, contb, #color = 'g',
+        width = width, edgecolor = 'black',
+        label='De 31 a 60 anos')
+  plt.bar(X_axis + 2*width, contc, #color = 'y',
+        width = width, edgecolor = 'black',
+        label='61 anos ou mais')
+
+  plt.xlabel("Planos")
+  plt.ylabel("Quantidade de pessoas")
+  plt.title("Quantidade de pessoas por plano e idade")
+  # plt.grid(linestyle='--')
+  plt.xticks(X_axis + width, planos)
+  plt.legend()
+  plt.show()
 
 
 
@@ -221,41 +327,46 @@ dici = {}
 # dici={cliente1["cpf"]: cliente1}
 lerArquivo(dici)
 opcao = 99
-# while(opcao !=0):
-#     imprimeMenu()
-#     opcao = int(input())
-#     if(opcao==1):
-#         listarClientes(dici)
-#     elif(opcao==2): 
-#         cpf = input("Digite o CPF do cliente:")
-#         nome = input("Digite oo nome do cliente:")
-#         numero = input("Digite oo numero do cliente:")
-#         data = input("Digite a data de nascimento do cliente dd/mm/aaaa: ")
-#         plano = input("Digite o plano do cliente:")
-#         cliente = receberInfoCliente(cpf, nome, numero, data, plano, dicPlanos)
-#         inserirCliente(dici, cliente)
-#     elif(opcao==3):
-#         cpf = input("Digite o CPF do cliente para buscar:")
-#         buscarCliente(dici, cpf)
-#     elif(opcao==4):
-#         cpf = input("Digite o CPF do cliente para atualizar:")
-#         novoSaldo = float(input("Digite o novo saldo:"))
-#         atualizaSaldo(dici, cpf, novoSaldo)
-#     elif(opcao==5):
-#         cpf = input("Digite o CPF do cliente para adicionar a chamada:")
-#         chamada = input("Digite a chamada a ser adicionada:")
-#         adicionarChamada(dici, cpf, chamada)
-#     elif(opcao==6):
-#         cpf = input("Digite o CPF do cliente para deletar:")
-#         deletarCliente(dici, cpf)
-#     #elif(opcao==7):
-#     #    salvarArquivo(dici)
-#     elif(opcao==0):
-#         print("Fim da execução.")
+while(opcao !=0):
+     imprimeMenu()
+     opcao = int(input())
+     if(opcao==1):
+         listarClientes(dici)
+     elif(opcao==2): 
+         cpf = input("Digite o CPF do cliente:")
+         nome = input("Digite oo nome do cliente:")
+         numero = input("Digite oo numero do cliente:")
+         data = input("Digite a data de nascimento do cliente dd/mm/aaaa: ")
+         plano = input("Digite o plano do cliente:")
+         cliente = receberInfoCliente(cpf, nome, numero, data, plano, dicPlanos)
+         inserirCliente(dici, cliente)
+     elif(opcao==3):
+         cpf = input("Digite o CPF do cliente para buscar:")
+         buscarCliente(dici, cpf)
+     elif(opcao==4):
+         cpf = input("Digite o CPF do cliente para atualizar:")
+         novoSaldo = float(input("Digite o novo saldo:"))
+         atualizaSaldo(dici, cpf, novoSaldo)
+     elif(opcao==5):
+         cpf = input("Digite o CPF do cliente para adicionar a chamada:")
+         chamada = input("Digite a chamada a ser adicionada:")
+         adicionarChamada(dici, cpf, chamada)
+     elif(opcao==6):
+         cpf = input("Digite o CPF do cliente para deletar:")
+         deletarCliente(dici, cpf)
+     #elif(opcao==7):
+     #    salvarArquivo(dici)
+     elif(opcao==8):
+         graficoPlanos(dici)
+         graficoPlanosPie(dici)
+         graficoIdadeSaldo(dici)
+         graficoPlanosIdade(dici)
+     elif(opcao==0):
+         print("Fim da execução.")
 
 
 
-##Variáveis de interface
+""" ##Variáveis de interface
 infoUsuarioLabels = ["CPF", "Nome", "Plano", "Data de Nascimento", ""]
 
 ##Funções auxiliares para interface
@@ -334,8 +445,7 @@ def ajaxfile():
         tipoAcao = request.form['tipoAcao']
         print(cpf)
     return jsonify({'htmlresponse': render_template('modal.html',cpf=cpf, tipoAcao=tipoAcao)})
-
-
+ """
 
 
 
