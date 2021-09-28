@@ -1,6 +1,25 @@
 import numpy as np
 import random
 
+plano1 = {
+    "nome": "top10",
+    "minutosChamada": 100,
+    "gigaInternet":10
+}
+plano2 = {
+    "nome": "top20",
+    "minutosChamada": 200,
+    "gigaInternet":20
+}
+plano3 = {
+    "nome": "top50",
+    "minutosChamada": 500,
+    "gigaInternet":50
+}
+caracPlanos = [plano1, plano2,plano3]
+
+
+
 probClientes = [20, 50, 30]
 arrayProb = np.concatenate([np.full(20, 1), np.full(50, 2), np.full(30, 3)])
 listaPlanos = ["top10", "top20", "top50"]
@@ -55,6 +74,7 @@ def probabilidadePlano(tipoCliente):
 
     return arrayProbPlano[random.randint(0,99)]
 
+
 def criarChamadas():
     numeroChamdas = random.randint(1,15)
     listaChamadas = []
@@ -64,19 +84,24 @@ def criarChamadas():
      
     return listaChamadas
 
+
 def getDataNascimento(anoInicial, anoFinal):
     return  str(random.randint(1,31))+"/"+str(random.randint(1,12))+"/"+ str(random.randint(anoInicial,anoFinal))
 
+
 def getCpf():
     return str(random.randint(111111111,999999999))+"-"+str(random.randint(11,99))
+
 
 def getNome():
     nome = listaNomes[random.randint(0, len(listaNomes)-1)]
     sobrenome = listaSobrenome[random.randint(0, len(listaSobrenome)-1)]
     return nome + " " + sobrenome
 
+
 def getNumero():
     return str(random.randint(111111111,999999999))
+
 
 def getCliente(cpf, nome, numero, dataNascimento, plano, saldo, minutoDisponivel, internetDisponivel, chamadas): ### pega os inputs para usar em inserirCliente
     ### recebe input com as informações do cliente e devolve um cliente
@@ -102,10 +127,13 @@ def gerarCliente(arrayProb, caracClientes):
     plano = probabilidadePlano(clienteType)
     saldo =  random.normalvariate(c["mediaSaldo"], c["vSaldo"])
     saldo = saldo if saldo>=0 else 0
-    minutoDisponivel = random.normalvariate(c["mediaMinuto"], c["vMinuto"])
+
+    minutoDisponivel = random.normalvariate((caracPlanos[clienteType-1]["minutosChamada"]), c["vMinuto"])/2
     minutoDisponivel = minutoDisponivel if minutoDisponivel>=0 else 0
-    internetDisponivel = random.normalvariate(c["mediaInternet"], c["vInternet"])
+    internetDisponivel = random.normalvariate((caracPlanos[clienteType-1]["gigaInternet"]), c["vInternet"])/2
     internetDisponivel = internetDisponivel if internetDisponivel>=0 else 0
+
+
     chamadas = criarChamadas() 
     return getCliente(getCpf(),getNome(), getNumero(), dataNascimento, plano, saldo, minutoDisponivel, internetDisponivel, chamadas )
 
