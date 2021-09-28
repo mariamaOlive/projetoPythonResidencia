@@ -192,7 +192,7 @@
                 <h4 class="modal-title"></h4>
                 <button type="button" class="close" data-dismiss="modal">×</button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="modal-vazio">
             </div>
         
         </div>
@@ -211,8 +211,8 @@
                 type: 'post',
                 data: {cpf: cpf, tipoAcao: tipoAcao},
                 success: function(data){ 
-                    $('.modal-body').html(data); 
-                    $('.modal-body').append(data.htmlresponse);
+                    $('#modal-vazio').html(data); 
+                    $('#modal-vazio').append(data.htmlresponse);
                     $('#empModal').modal('show'); 
                 }
             });
@@ -229,8 +229,8 @@
                 type: 'post',
                 data: {vis: vis},
                 success: function(data){ 
-                    $('.modal-body').html(data); 
-                    $('.modal-body').append(data.htmlresponse);
+                    $('#modal-vazio').html(data); 
+                    $('#modal-vazio').append(data.htmlresponse);
                     $('#empModal').modal('show'); 
                 }
             });
