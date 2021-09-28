@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 from flask_bootstrap import Bootstrap
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
+
 #import matplotlib.pyplot
 
 ### Projeto Residencia Python - Operadoras Telefonicas
@@ -334,6 +332,16 @@ def ajaxfile():
         tipoAcao = request.form['tipoAcao']
         print(cpf)
     return jsonify({'htmlresponse': render_template('modal.html',cpf=cpf, tipoAcao=tipoAcao)})
+
+
+@app.route("/ajaxfilevisualizacao",methods=["POST","GET"])
+def ajaxfilevisualizacao():
+    if request.method == 'POST':
+        print(">>>>>>>>>>>", request.form)
+        visType = request.form['vis']
+        print(visType)
+        imagem = "/static/bulba.jpeg"
+    return jsonify({'htmlresponse': render_template('modalVisualizacao.html',imagem=imagem)})
 
 
 

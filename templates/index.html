@@ -1,6 +1,4 @@
 {% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
-
 
 {% block page_content %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -18,9 +16,28 @@
 
 
 {# Botão que dispara modal de cadastro de cliente #}
-<button type="button" class="btn btn-secondary mb-4" data-toggle="modal" data-target="#exampleModal">
-  Cadastrar cliente
-</button>
+ <div  class="container mb-5">
+        <div class="row">
+            <div class="col-2">
+                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalCadastro">
+                Cadastrar cliente
+                </button>
+            </div>
+            <div class="col-2">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Visualizações
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                        <button class="dropdown-item btn-visualizacao" type="button" name="visualizao" value = "vis1">Visualização 1</button>
+                        <button class="dropdown-item btn-visualizacao" type="button" name="visualizao" value = "vis2">Visualização 2</button>
+                        <button class="dropdown-item btn-visualizacao" type="button" name="visualizao" value = "vis3">Visualização 3</button>
+                        <button class="dropdown-item btn-visualizacao" type="button" name="visualizao" value = "vis4">Visualização 4</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
 
 
 {# Lista de clientes #}
@@ -118,7 +135,7 @@
 
 
 {# Modal de cadatro de cliente #}
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalCadastro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -164,12 +181,15 @@
 </div>
 
 
+{# Modal visualização #}
+
+
 {# Modal para Adicionar saldo / chamada #}
 <div class="modal fade" id="empModal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Atualizar saldo</h4>
+                <h4 class="modal-title"></h4>
                 <button type="button" class="close" data-dismiss="modal">×</button>
             </div>
             <div class="modal-body">
@@ -190,6 +210,24 @@
                 url: '/ajaxfile',
                 type: 'post',
                 data: {cpf: cpf, tipoAcao: tipoAcao},
+                success: function(data){ 
+                    $('.modal-body').html(data); 
+                    $('.modal-body').append(data.htmlresponse);
+                    $('#empModal').modal('show'); 
+                }
+            });
+        });
+    });
+</script>
+
+<script type='text/javascript'>
+    $(document).ready(function(){
+        $('.btn-visualizacao').click(function(){
+            var vis = $(this).val();
+            $.ajax({
+                url: '/ajaxfilevisualizacao',
+                type: 'post',
+                data: {vis: vis},
                 success: function(data){ 
                     $('.modal-body').html(data); 
                     $('.modal-body').append(data.htmlresponse);
