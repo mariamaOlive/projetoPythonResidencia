@@ -7,6 +7,35 @@ listaPlanos = ["top10", "top20", "top50"]
 listaNomes = ["Maria", "João", "Bruna", "Gabriel", "Alice", "Mario", "Cristina", "Fernando"]
 listaSobrenome = ["Oliveira", "Silva", "Arraes", "Pereira", "Assis", "Correia"]
 listaClientes = []
+carCliente = {
+    1:{'infData': 1990,
+    'supData': 2010,
+        'mediaSaldo': 10,
+        'vSaldo': 5,
+        'mediaMinuto':50,
+        'vMinuto':30,
+        'mediaInternet':1,
+        'vInternet': .5,
+    },
+    2:{'infData': 1960,
+    'supData': 1989,
+        'mediaSaldo': 30,
+        'vSaldo': 10,
+        'mediaMinuto':20,
+        'vMinuto':5,
+        'mediaInternet':4,
+        'vInternet': 1,
+    },
+    3:{'infData': 1990,
+    'supData': 2010,
+        'mediaSaldo': 10,
+        'vSaldo': 5,
+        'mediaMinuto':50,
+        'vMinuto':30,
+        'mediaInternet':1,
+        'vInternet': .5,
+    }
+}  
 
 
 def definirTipoCliente(arrayProb):
@@ -65,40 +94,23 @@ def getCliente(cpf, nome, numero, dataNascimento, plano, saldo, minutoDisponivel
     return cliente
 
 
-def gerarCliente(arrayProb):
-    tipoCliente = definirTipoCliente(arrayProb)
+def gerarCliente(arrayProb, caracClientes):
+    clienteType = definirTipoCliente(arrayProb)
+    c = caracClientes[clienteType]
     
-    if(tipoCliente==1):
-        dataNascimento = getDataNascimento(1990, 2010)
-        plano = probabilidadePlano(1)
-        saldo = random.normalvariate(10, 5)
-        minutoDisponivel = random.normalvariate(50, 30)
-        internetDisponivel = random.normalvariate(1, .5)
-        chamadas = criarChamadas() 
-        return getCliente(getCpf(),getNome(), getNumero(), dataNascimento, plano, saldo, minutoDisponivel, internetDisponivel, chamadas )
+    dataNascimento = getDataNascimento(c["infData"], c["supData"])
+    plano = probabilidadePlano(clienteType)
+    saldo = random.normalvariate(c["mediaSaldo"], c["vSaldo"])
+    minutoDisponivel = random.normalvariate(c["mediaMinuto"], c["vMinuto"])
+    internetDisponivel = random.normalvariate(c["mediaInternet"], c["vInternet"])
+    chamadas = criarChamadas() 
+    return getCliente(getCpf(),getNome(), getNumero(), dataNascimento, plano, saldo, minutoDisponivel, internetDisponivel, chamadas )
 
-    elif(tipoCliente==2):
-        dataNascimento = getDataNascimento(1960, 1989)
-        plano = probabilidadePlano(2)
-        saldo = random.normalvariate(30, 10)
-        minutoDisponivel = random.normalvariate(20, 5)
-        internetDisponivel = random.normalvariate(4, 1)
-        chamadas = criarChamadas() 
-        return getCliente(getCpf(),getNome(), getNumero(), dataNascimento, plano, saldo, minutoDisponivel, internetDisponivel, chamadas )
-    else:
-        dataNascimento = getDataNascimento(1922, 1959)
-        plano = probabilidadePlano(3)
-        saldo = random.normalvariate(50, 20)
-        minutoDisponivel = random.normalvariate(40, 10)
-        internetDisponivel = random.normalvariate(10, 1)
-        chamadas = criarChamadas() 
-        return getCliente(getCpf(),getNome(), getNumero(), dataNascimento, plano, saldo, minutoDisponivel, internetDisponivel, chamadas )
-
-
-def gerarListaClientes(numeroClientes, arrayProb):
+    
+def gerarListaClientes(numeroClientes, arrayProb, carCliente):
     listaClientes=[]
     for i in range(numeroClientes):
-        listaClientes.append(gerarCliente(arrayProb))
+        listaClientes.append(gerarCliente(arrayProb, carCliente))
 
     return listaClientes
 
@@ -125,5 +137,5 @@ def salvarArquivo(listaClientes):
     
     arquivo.close()
 
-listaClientes = gerarListaClientes(100, arrayProb)
+listaClientes = gerarListaClientes(100, arrayProb, carCliente)
 salvarArquivo(listaClientes)
