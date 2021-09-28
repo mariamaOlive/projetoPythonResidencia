@@ -100,9 +100,12 @@ def gerarCliente(arrayProb, caracClientes):
     
     dataNascimento = getDataNascimento(c["infData"], c["supData"])
     plano = probabilidadePlano(clienteType)
-    saldo = random.normalvariate(c["mediaSaldo"], c["vSaldo"])
+    saldo =  random.normalvariate(c["mediaSaldo"], c["vSaldo"])
+    saldo = saldo if saldo>=0 else 0
     minutoDisponivel = random.normalvariate(c["mediaMinuto"], c["vMinuto"])
+    minutoDisponivel = minutoDisponivel if minutoDisponivel>=0 else 0
     internetDisponivel = random.normalvariate(c["mediaInternet"], c["vInternet"])
+    internetDisponivel = internetDisponivel if internetDisponivel>=0 else 0
     chamadas = criarChamadas() 
     return getCliente(getCpf(),getNome(), getNumero(), dataNascimento, plano, saldo, minutoDisponivel, internetDisponivel, chamadas )
 
