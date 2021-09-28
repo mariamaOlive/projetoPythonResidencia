@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 from flask_bootstrap import Bootstrap
+import matplotlib.pyplot as plt
+import numpy as np
 
-#import matplotlib.pyplot
 
 ### Projeto Residencia Python - Operadoras Telefonicas
 ### Lucas e Mariama
@@ -20,18 +21,18 @@ from flask_bootstrap import Bootstrap
 
 plano1 = {
     "nome": "top10",
-    "minutosChamada": 10,
-    "gigaInternet":5
+    "minutosChamada": 100,
+    "gigaInternet":10
 }
 plano2 = {
     "nome": "top20",
-    "minutosChamada": 20,
-    "gigaInternet":10
+    "minutosChamada": 200,
+    "gigaInternet":20
 }
 plano3 = {
     "nome": "top50",
-    "minutosChamada": 50,
-    "gigaInternet":25
+    "minutosChamada": 500,
+    "gigaInternet":50
 }
 
 dicPlanos = {"top10": plano1, "top20": plano2, "top50": plano3}
@@ -139,11 +140,12 @@ def imprimeMenu():
     print("5 - Adicionar chamada")
     print("6 - Deletar cliente")
     #print("7 - Salvar arquivo")
+    print("8 - Gráficos")
     print("0 - Fim da execução")
 
 
 def salvarArquivo(dicionarioClientes):
-    arquivo = open("listaClientes.txt", "w")
+    arquivo = open("listaClientes2.txt", "w")
     
     for info in dicionarioClientes.values():
         stringArquivo = ""
@@ -167,7 +169,7 @@ def salvarArquivo(dicionarioClientes):
 
 
 def lerArquivo(dicClientes):
-    arquivo = open("listaClientes.txt", "r")
+    arquivo = open("listaClientes2.txt", "r")
     linhas = arquivo.readlines()
     cont = 0
 
@@ -194,62 +196,194 @@ def lerArquivo(dicClientes):
 
 ### Graficos
 
-#def graficoPlanos(dicionarioClientes):
-#    cont10=0
-#    cont20=0
-#    cont50=0
-#    for info in dicionarioClientes.values():
-#        if (info["plano"]=="top10"):
-#            cont10+=1
-#        elif (info["plano"]=="top20"):
-#            cont20+=1
-#        elif (info["plano"]=="top50"):
-#            cont50+=1
-#
- #   x = ["Top 10", "Top 20", "Top 50"]
- #   y = [cont10, cont20, cont30]
-#
-#    plt.bar(x, y, color='red', label='Grafico de barras dos planos telefônicos')
-#    plt.legend()
-#    plt.show()
+def graficoPlanos(dicionarioClientes, modo):
+    cont10=0
+    cont20=0
+    cont50=0
+    for info in dicionarioClientes.values():
+        if (info["plano"]=="top10"):
+            cont10+=1
+        elif (info["plano"]=="top20"):
+            cont20+=1
+        elif (info["plano"]=="top50"):
+            cont50+=1
 
+    x = ["Top 10", "Top 20", "Top 50"]
+    y = [cont10, cont20, cont50]
+
+    plt.bar(x, y, color='red')
+    plt.xlabel("Planos telefônicos")
+    plt.ylabel("Quantidade")
+    plt.title("Gráfico de barras dos planos telefônicos")
+    plt.legend()
+    if modo=="exibir":
+        plt.show()
+    elif modo=="salvar":
+        plt.savefig("plot1.png")
+
+def graficoPlanosPie(dicionarioClientes, modo):
+    cont10=0
+    cont20=0
+    cont50=0
+    for info in dicionarioClientes.values():
+        if (info["plano"]=="top10"):
+            cont10+=1
+        elif (info["plano"]=="top20"):
+            cont20+=1
+        elif (info["plano"]=="top50"):
+            cont50+=1
+
+    planos = ["Top 10", "Top 20", "Top 50"]
+    count = [cont10, cont20, cont50]
+
+    cores = ["paleturquoise", "darkred", "khaki"]
+    # Criando um gráfico
+    plt.pie(count, labels = planos, colors = cores, startangle = 90, shadow = True)
+    plt.title("Gráfico de setores dos planos telefônicos")
+    plt.legend(planos)
+    if modo=="exibir":
+        plt.show()
+    elif modo=="salvar":
+        plt.savefig("plot2.png")
+
+def calculaIdade(nascimento):
+    tam = len(nascimento)
+    idade = 2021-int(nascimento[tam-4:tam])
+    return idade
+
+def graficoIdadeSaldo(dicionarioClientes, modo):
+    idades = []
+    saldos = []
+    for info in dicionarioClientes.values():
+        idade = calculaIdade(info["nascimento"])
+        idades.append(idade)
+        saldos.append(float(info["saldo"]))
+    plt.scatter(idades, saldos, color="red")
+    plt.xlabel("Idade")
+    plt.ylabel("Saldo disponível")
+    plt.title("Gráfico de dispersão da idade e saldo disponível")
+    if modo=="exibir":
+        plt.show()
+    elif modo=="salvar":
+        plt.savefig("plot3.png")
+
+def graficoPlanosIdade(dicionarioClientes, modo):
+  planos = ["Top 10", "Top 20", "Top 50"] #X = ['Group A','Group B','Group C','Group D']
+  
+  cont10a = cont20a = cont50a = cont10b = cont20b = cont50b = cont10c = cont20c = cont50c = 0
+
+  for info in dicionarioClientes.values():
+       if (info["plano"]=="top10"):
+           if (calculaIdade(info["nascimento"])<=30):
+             cont10a+=1
+           elif (calculaIdade(info["nascimento"])<=60 and calculaIdade(info["nascimento"])>30):
+             cont10b+=1
+           elif (calculaIdade(info["nascimento"])>60):
+             cont10c+=1
+       elif (info["plano"]=="top20"):
+           if (calculaIdade(info["nascimento"])<=30):
+             cont20a+=1
+           elif (calculaIdade(info["nascimento"])<=60 and calculaIdade(info["nascimento"])>30):
+             cont20b+=1
+           elif (calculaIdade(info["nascimento"])>60):
+             cont20c+=1
+       elif (info["plano"]=="top50"):
+           if (calculaIdade(info["nascimento"])<=30):
+             cont50a+=1
+           elif (calculaIdade(info["nascimento"])<=60 and calculaIdade(info["nascimento"])>30):
+             cont50b+=1
+           elif (calculaIdade(info["nascimento"])>60):
+             cont50c+=1
+
+  conta = [cont10a, cont20a, cont50a]
+  contb = [cont10b, cont20b, cont50b]
+  contc = [cont10c, cont50c, cont50c]
+
+
+  X_axis = np.arange(len(planos))
+  width = 0.25
+
+  plt.bar(X_axis, conta, #color = 'b',
+        width = width, edgecolor = 'black',
+        label='Até 30 anos')
+  plt.bar(X_axis + width, contb, #color = 'g',
+        width = width, edgecolor = 'black',
+        label='De 31 a 60 anos')
+  plt.bar(X_axis + 2*width, contc, #color = 'y',
+        width = width, edgecolor = 'black',
+        label='61 anos ou mais')
+
+  plt.xlabel("Planos telefônicos")
+  plt.ylabel("Quantidade de pessoas")
+  plt.title("Gráfico de barras da quantidade de pessoas por plano e idade")
+  plt.xticks(X_axis + width, planos)
+  plt.legend()
+  if modo=="exibir":
+    plt.show()
+  elif modo=="salvar":
+    plt.savefig("plot4.png")
+
+def graficoMinutosChamadas(dicionarioClientes, modo):
+    minutos = []
+    qtdChamadas = []
+    saldos = []
+    size = 5
+    for info in dicionarioClientes.values():
+        minutos.append(int(info["minutoDisponivel"])) ###nome da var vai mudar para minutoGasto
+        qtdChamadas.append(len(info["chamadas"]))
+        saldos.append(float(info["saldo"])*size) ### size referente ao tamanho do caracter 
+    plt.scatter(qtdChamadas, minutos, marker = "*", s=saldos, color='red', label="Saldo disponível")
+    plt.xlabel("Quantidade de chamadas realizadas")
+    plt.ylabel("Minutos gastos")
+    plt.title('Grafico de dispersão de minutos por quantidade de chamadas e saldo')
+    plt.legend() 
+    if modo=="exibir":
+        plt.show()
+    elif modo=="salvar":
+        plt.savefig("plot5.png")
 
 
 dici = {}
 # dici={cliente1["cpf"]: cliente1}
 lerArquivo(dici)
-opcao = 99
+# opcao = 99
 # while(opcao !=0):
-#     imprimeMenu()
-#     opcao = int(input())
-#     if(opcao==1):
-#         listarClientes(dici)
-#     elif(opcao==2): 
-#         cpf = input("Digite o CPF do cliente:")
-#         nome = input("Digite oo nome do cliente:")
-#         numero = input("Digite oo numero do cliente:")
-#         data = input("Digite a data de nascimento do cliente dd/mm/aaaa: ")
-#         plano = input("Digite o plano do cliente:")
-#         cliente = receberInfoCliente(cpf, nome, numero, data, plano, dicPlanos)
-#         inserirCliente(dici, cliente)
-#     elif(opcao==3):
-#         cpf = input("Digite o CPF do cliente para buscar:")
-#         buscarCliente(dici, cpf)
-#     elif(opcao==4):
-#         cpf = input("Digite o CPF do cliente para atualizar:")
-#         novoSaldo = float(input("Digite o novo saldo:"))
-#         atualizaSaldo(dici, cpf, novoSaldo)
-#     elif(opcao==5):
-#         cpf = input("Digite o CPF do cliente para adicionar a chamada:")
-#         chamada = input("Digite a chamada a ser adicionada:")
-#         adicionarChamada(dici, cpf, chamada)
-#     elif(opcao==6):
-#         cpf = input("Digite o CPF do cliente para deletar:")
-#         deletarCliente(dici, cpf)
-#     #elif(opcao==7):
-#     #    salvarArquivo(dici)
-#     elif(opcao==0):
-#         print("Fim da execução.")
+#      imprimeMenu()
+#      opcao = int(input())
+#      if(opcao==1):
+#          listarClientes(dici)
+#      elif(opcao==2): 
+#          cpf = input("Digite o CPF do cliente:")
+#          nome = input("Digite oo nome do cliente:")
+#          numero = input("Digite oo numero do cliente:")
+#          data = input("Digite a data de nascimento do cliente dd/mm/aaaa: ")
+#          plano = input("Digite o plano do cliente:")
+#          cliente = receberInfoCliente(cpf, nome, numero, data, plano, dicPlanos)
+#          inserirCliente(dici, cliente)
+#      elif(opcao==3):
+#          cpf = input("Digite o CPF do cliente para buscar:")
+#          buscarCliente(dici, cpf)
+#      elif(opcao==4):
+#          cpf = input("Digite o CPF do cliente para atualizar:")
+#          novoSaldo = float(input("Digite o novo saldo:"))
+#          atualizaSaldo(dici, cpf, novoSaldo)
+#      elif(opcao==5):
+#          cpf = input("Digite o CPF do cliente para adicionar a chamada:")
+#          chamada = input("Digite a chamada a ser adicionada:")
+#          adicionarChamada(dici, cpf, chamada)
+#      elif(opcao==6):
+#          cpf = input("Digite o CPF do cliente para deletar:")
+#          deletarCliente(dici, cpf)
+#      #elif(opcao==7):
+#      #    salvarArquivo(dici)
+#      elif(opcao==8):
+#          graficoPlanos(dici, "exibir")
+#          graficoPlanosPie(dici, "exibir")
+#          graficoIdadeSaldo(dici, "exibir")
+#          graficoPlanosIdade(dici, "exibir")
+#          graficoMinutosChamadas(dici, "exibir")
+#      elif(opcao==0):
+#          print("Fim da execução.")
 
 
 
@@ -288,6 +422,7 @@ def index():
 
     return render_template('index.html',clientes=listarClientes(dici), planos = buscarPlanos(), usuarioLabel = infoUsuarioLabels)
 
+
 @app.route('/inserir', methods=['POST'])
 def inserir():
     cliente = receberInfoCliente(
@@ -300,10 +435,12 @@ def inserir():
     inserirCliente(dici, cliente)
     return redirect(url_for('index'))
 
+
 @app.route('/alterarCliente', methods=['POST'])
 def alterar():
     print(request.form["cpf"])
     return redirect(url_for('index'))
+
 
 @app.route('/alterarSaldo', methods=['POST'])
 def alterarSaldo():
@@ -313,6 +450,7 @@ def alterarSaldo():
     atualizaSaldo(dici, cpf,novoSaldo)
 
     return redirect(url_for('index'))
+
 
 @app.route('/adicionarChamada', methods=['POST'])
 def inserirChamada():
