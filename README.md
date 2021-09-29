@@ -1,7 +1,7 @@
 # Projeto Python - Residência de Dados
 
 ## Sobre o projeto
-**Este **projeto faz parte da disciplina Introdução a Python da Residência de Engenharia e Ciência de Dados - UFPE**
+**Este projeto faz parte da disciplina Introdução a Python da Residência de Engenharia e Ciência de Dados - UFPE**
 
 Nesse projeto desenvolvemos um sistema CRUD de um sistema de operadora de celualr pré-pago.
 
