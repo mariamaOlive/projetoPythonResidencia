@@ -45,8 +45,8 @@ carCliente = {
         'mediaInternet':4,
         'vInternet': 1,
     },
-    3:{'infData': 1990,
-    'supData': 2010,
+    3:{'infData': 1910,
+    'supData': 1959,
         'mediaSaldo': 10,
         'vSaldo': 5,
         'mediaMinuto':50,
@@ -59,6 +59,7 @@ carCliente = {
 
 def definirTipoCliente(arrayProb):
     indexValor = random.randint(0,99)
+    print(indexValor)
     return arrayProb[indexValor]
 
 # Probabilidade de um cliente ter um certo tipo de plano
