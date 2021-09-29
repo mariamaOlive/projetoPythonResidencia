@@ -1,6 +1,8 @@
 # Projeto Python - Residência de Dados
 
 ## Sobre o projeto
+**Este **projeto faz parte da disciplina Introdução a Python da Residência de Engenharia e Ciência de Dados - UFPE**
+
 Nesse projeto desenvolvemos um sistema CRUD de um sistema de operadora de celualr pré-pago.
 
 Funcionalidades do sistema:
@@ -11,7 +13,7 @@ Funcionalidades do sistema:
 * Adicionar chamadas
 * Apresentar quatro tipos diferentes de visualização
 
-Todas funcionalidade salvam em tempo real em um arquivo de leitura e escrita (default: listaClientes.txt)
+Todas funcionalidade salvam em tempo real um arquivo de leitura e escrita (default: listaClientes.txt)
 
 ## Construido com
 * Python 3.9.7
@@ -26,7 +28,7 @@ Você pode configurar o ambiente do programa de duas formas:
 
 ### Instalação
 
-Inportar conda environment:
+(Forma 1) Inportar conda environment:
 1. Utilize o arquivo `requirements.yml` para importar o environment conda
     ```sh
     conda env create -f requirements.yml --name <nome_environment>
@@ -36,7 +38,7 @@ Inportar conda environment:
     conda activate <nome_environment>
     ```
 
-Bibliotecas separadas via conda ou pip:
+(Forma 1) Bibliotecas separadas via conda ou pip:
 1. Via conda:
     ```sh
     conda install matplotlib
