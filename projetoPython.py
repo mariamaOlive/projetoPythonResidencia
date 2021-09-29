@@ -7,7 +7,7 @@ import matplotlib
 matplotlib.use('Agg')
 
 
-# Tipos de planos telefonicos
+# Tipos de planos telefonicos (a principio podemos tirar essas informacoes)
 plano1 = {
     "nome": "top10",
     "minutosChamada": 100,
@@ -24,11 +24,10 @@ plano3 = {
     "gigaInternet": 50
 }
 
-
+###
 dicPlanos = {"top10": plano1, "top20": plano2, "top50": plano3}
 
 # Função para salvar o dicionario no arquivo (função utilizada em todas as operações que alterem o dicionario)
-
 def salvarArquivo(dicionarioClientes, nomeArq):
     arquivo = open(nomeArq, "w")
 
@@ -75,8 +74,8 @@ def receberInfoCliente(cpf, nome, numero, dataNascimento, plano, planosDisponive
         "nascimento": dataNascimento,
         "plano": plano,
         "saldo": 0,
-        "minutoConsumido": planosDisponiveis[plano]["minutosChamada"],
-        "internetConsumida": planosDisponiveis[plano]["gigaInternet"],
+        "minutoConsumido": 0,
+        "internetConsumida": 0,
         "chamadas": []
     }
     return cliente
@@ -157,35 +156,6 @@ def lerArquivo(dicClientes, nomeArq):
 
 # Graficos
 
-# Grafico 0: Grafico de barras dos planos telefonicos
-def graficoPlanos(dicionarioClientes, modo):
-    plt.clf()
-    path = "static/plot0.png"
-    cont10 = 0
-    cont20 = 0
-    cont50 = 0
-    for info in dicionarioClientes.values():
-        if (info["plano"] == "top10"):
-            cont10 += 1
-        elif (info["plano"] == "top20"):
-            cont20 += 1
-        elif (info["plano"] == "top50"):
-            cont50 += 1
-
-    x = ["Top 10", "Top 20", "Top 50"]
-    y = [cont10, cont20, cont50]
-
-    plt.bar(x, y, color='red')
-    plt.xlabel("Planos telefônicos")
-    plt.ylabel("Quantidade")
-    plt.title("Gráfico de barras dos planos telefônicos")
-    plt.legend()
-    if modo == "exibir":
-        plt.show()
-    elif modo == "salvar":
-        plt.savefig(path)
-    return path
-
 # Grafico 1: Grafico de setores dos planos telefonicos
 def graficoPlanosPie(dicionarioClientes, modo):
     plt.clf()
@@ -205,7 +175,6 @@ def graficoPlanosPie(dicionarioClientes, modo):
     count = [cont10, cont20, cont50]
 
     cores = ["paleturquoise", "darkred", "khaki"]
-    # Criando um gráfico
     plt.pie(count, labels=planos, colors=cores, startangle=90, shadow=True)
     plt.title("Gráfico de setores dos planos telefônicos")
     plt.legend(planos)
@@ -215,7 +184,7 @@ def graficoPlanosPie(dicionarioClientes, modo):
         plt.savefig(path)
     return path
 
-# Função básica para calcular idade baseada apenas no ano de nascimento
+# Função básica para calcular idade baseada apenas no ano de nascimento (poderiamos utilizar biblioteca datetime para fazer isso de forma simples e melhor)
 def calculaIdade(nascimento):
     tam = len(nascimento)
     idade = 2021-int(nascimento[tam-4:tam])
@@ -245,11 +214,12 @@ def graficoIdadeSaldo(dicionarioClientes, modo):
 def graficoPlanosIdade(dicionarioClientes, modo):
     plt.clf()
     path = "static/plot3.png"
-    # X = ['Group A','Group B','Group C','Group D']
     planos = ["Top 10", "Top 20", "Top 50"]
 
     cont10a = cont20a = cont50a = cont10b = cont20b = cont50b = cont10c = cont20c = cont50c = 0
 
+    # Faixa de idade a = ate 30 anos ; faixa de idade b = 31 a 60 anos ; faixa de idade c = 61+
+    # for para contar quantos clientes tem em cada plano (top10,top20,top50) para cada faixa de idade(a,b,c)
     for info in dicionarioClientes.values():
         if (info["plano"] == "top10"):
             if (calculaIdade(info["nascimento"]) <= 30):
@@ -280,15 +250,9 @@ def graficoPlanosIdade(dicionarioClientes, modo):
     X_axis = np.arange(len(planos))
     width = 0.25
 
-    plt.bar(X_axis, conta,  # color = 'b',
-            width=width, edgecolor='black',
-            label='Até 30 anos')
-    plt.bar(X_axis + width, contb,  # color = 'g',
-            width=width, edgecolor='black',
-            label='De 31 a 60 anos')
-    plt.bar(X_axis + 2*width, contc,  # color = 'y',
-            width=width, edgecolor='black',
-            label='61 anos ou mais')
+    plt.bar(X_axis, conta, width=width, edgecolor='black', label='Até 30 anos') #Grafico de barras dos planos de pessoas da faixa A
+    plt.bar(X_axis + width, contb, width=width, edgecolor='black', label='De 31 a 60 anos') # Grafico de barras dos planos das pessoas da faixa B
+    plt.bar(X_axis + 2*width, contc, width=width, edgecolor='black', label='61 anos ou mais') # Grafico de barras dos planos das pessoas da faixa C
 
     plt.xlabel("Planos telefônicos")
     plt.ylabel("Quantidade de pessoas")
@@ -307,15 +271,13 @@ def graficoMinutosChamadas(dicionarioClientes, modo):
     minutos = []
     qtdChamadas = []
     saldos = []
-    size = 5
+    size = 5 #tamanho dos caracteres
     path = "static/plot4.png"
 
     for info in dicionarioClientes.values():
-        # nome da var vai mudar para minutoGasto
         minutos.append(int(info["minutoConsumido"]))
         qtdChamadas.append(len(info["chamadas"]))
-        # size referente ao tamanho do caracter
-        saldos.append(float(info["saldo"])*size)
+        saldos.append(float(info["saldo"])*size) # size referente ao tamanho do caracter (no caso estrela)
     plt.scatter(qtdChamadas, minutos, marker="*", s=saldos,
                 color='red', label="Saldo disponível")
     plt.xlabel("Quantidade de chamadas realizadas")
@@ -330,11 +292,9 @@ def graficoMinutosChamadas(dicionarioClientes, modo):
     return path
 
 
-# Inicializa o dicionario
+# Inicializa o dicionario e leitura do arquivo
 dici = {}
-nomeArquivo = "listaClientes2.txt"
-# dici={cliente1["cpf"]: cliente1}
-# pensando em fazer um if para nao ler caso nao tenha arquivo
+nomeArquivo = "listaClientes.txt"
 lerArquivo(dici, nomeArquivo)
 
 
@@ -346,8 +306,6 @@ lerArquivo(dici, nomeArquivo)
 infoUsuarioLabels = ["CPF", "Nome", "Plano", "Data de Nascimento", ""]
 
 # Funções auxiliares para interface
-
-
 def buscarPlanos():
     planos = []
     for plano in dicPlanos.keys():
@@ -365,9 +323,6 @@ bootstrap = Bootstrap(app)
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>(1)")
-        #print(request.form)
-
         opcao = list(request.form.keys())
         if('deletar' in opcao):
             if(opcao[0] == 'deletar'):
@@ -378,7 +333,6 @@ def index():
             if cpf != "":
                 clienteUnico = [buscarCliente(dici, cpf)] if buscarCliente(
                     dici, cpf) != None else None
-                #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>(2)", clienteUnico)
                 return render_template('index.html', clientes=clienteUnico, planos=buscarPlanos(), usuarioLabel=infoUsuarioLabels)
 
     return render_template('index.html', clientes=listarClientes(dici), planos=buscarPlanos(), usuarioLabel=infoUsuarioLabels)
@@ -399,7 +353,6 @@ def inserir():
 
 @app.route('/alterarSaldo', methods=['POST'])
 def alterarSaldo():
-    #print(">>>>>>>>>>>", request.form)
     cpf = request.form["cpf"]
     novoSaldo = request.form["novoSaldo"]
     atualizaSaldo(dici, cpf, novoSaldo)
@@ -409,7 +362,6 @@ def alterarSaldo():
 
 @app.route('/adicionarChamada', methods=['POST'])
 def inserirChamada():
-    #print(">>>>>>>>>>>", request.form)
     cpf = request.form["cpf"]
     novoNumero = request.form["novoNumero"]
     adicionarChamada(dici, cpf, novoNumero)
@@ -420,36 +372,29 @@ def inserirChamada():
 @app.route("/ajaxfile", methods=["POST", "GET"])
 def ajaxfile():
     if request.method == 'POST':
-        #print(">>>>>>>>>>>", request.form)
         cpf = request.form['cpf']
         tipoAcao = request.form['tipoAcao']
-        #print(cpf)
     return jsonify({'htmlresponse': render_template('modal.html', cpf=cpf, tipoAcao=tipoAcao)})
 
 
 @app.route("/ajaxfilevisualizacao", methods=["POST", "GET"])
 def ajaxfilevisualizacao():
     if request.method == 'POST':
-
-        print(">>>>>>>>>>>", request.form)
         visType = request.form['vis']
         imagem = ""
         if(visType == "vis1"):
             image = graficoPlanosPie(dici, "salvar")
         elif (visType == "vis2"):
-            #graficoIdadeSaldo(dici, "exibir")
             image = graficoIdadeSaldo(dici, "salvar")
         elif (visType == "vis3"):
-            #graficoPlanosIdade(dici, "exibir")
             image = graficoPlanosIdade(dici, "salvar")
         else:
-            #graficoMinutosChamadas(dici, "exibir")
             image = graficoMinutosChamadas(dici, "salvar")
-        print(">>>>>>>>>>>>>>", image)
 
     return jsonify({'htmlresponse': render_template('modalVisualizacao.html', imagem=image)})
 
 
+# Desabilitar o cache para que nao interefira na exibição das visualizações
 @app.after_request
 def add_header(r):
     """
@@ -461,16 +406,3 @@ def add_header(r):
     r.headers["Expires"] = "0"
     r.headers['Cache-Control'] = 'public, max-age=0'
     return r
-
-
-"""
-@app.after_request
-def add_header(response):
-    # response.cache_control.no_store = True
-
-    print(">>>>>>>>>>>>>>>>>>5")
-    if 'Cache-Control' not in response.headers:
-        print(">>>>>>>>>>>>>>>>>>6")
-        response.headers['Cache-Control'] = 'no-store'
-    return response
-"""
