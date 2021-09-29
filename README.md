@@ -22,9 +22,7 @@ Todas funcionalidade salvam em tempo real um arquivo de leitura e escrita (defau
 
 
 ## Configurando o projeto
-Você pode configurar o ambiente do programa de duas formas:
-* importar conda emviroment
-* via pip instalar cada biblioteca separadamente
+Você pode configurar o ambiente do programa via pip instalando as bibliotecas a seguir
 
 ### Instalação
 
