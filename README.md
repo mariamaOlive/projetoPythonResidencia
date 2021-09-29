@@ -28,17 +28,7 @@ Você pode configurar o ambiente do programa de duas formas:
 
 ### Instalação
 
-(Forma 1) Inportar conda environment:
-1. Utilize o arquivo `requirements.yml` para importar o environment conda
-    ```sh
-    conda env create -f requirements.yml --name <nome_environment>
-    ```
-2. Pronto! O seu ambiente foi criado, agora é só ativar:
-    ```sh
-    conda activate <nome_environment>
-    ```
-
-(Forma 2) Bibliotecas separadas via conda ou pip:
+Bibliotecas separadas via conda ou pip:
 1. Via conda:
     ```sh
     conda install matplotlib
