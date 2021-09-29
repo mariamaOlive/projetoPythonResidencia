@@ -52,7 +52,7 @@ Bibliotecas separadas via conda ou pip:
     pip install flask
     ```
     ```sh
-    pip install flask-bootstrap4
+    pip install flask-bootstrap4 
     ```
 
 ### Executando o programa
