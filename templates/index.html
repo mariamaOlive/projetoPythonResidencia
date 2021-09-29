@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block page_content %}
+{# Links #}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
 {# Form que busca cliente #}
@@ -52,8 +53,6 @@
             {% endfor %} 
         </div>
     </div>
-
- 
     {% for cliente in clientes %}
         <div id="accordion">
             <div class="card mb-1" >
@@ -93,7 +92,6 @@
                         </div>
                     </div>
                 </div>
-
         {# Informação cliente detalhada #}
         <div id="{{cliente.cpf}}" class="collapse" aria-labelledby="heading{{cliente.cpf}}" data-parent="#accordion">
         <div class="card-body">
@@ -153,8 +151,6 @@
 </div>
 
 
-
-
 {# Modal de cadatro de cliente #}
 <div class="modal fade" id="modalCadastro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -212,7 +208,6 @@
             </div>
             <div class="modal-body" id="modal-vazio-vis">
             </div>
-        
         </div>
     </div>
 </div>
@@ -233,8 +228,8 @@
     </div>
 </div>
 
-
-{# Jquery script para modal #}
+{# Scripts #}
+{# Jquery script para modal - Adicionar Saldo/Chamada#}
 <script type='text/javascript'>
     $(document).ready(function(){
         $('.adicionarSaldo, .adicionarChamada').click(function(){
@@ -254,6 +249,7 @@
     });
 </script>
 
+{# Jquery script para modal - Visualização#}
 <script type='text/javascript'>
     $(document).ready(function(){
         $('.btn-visualizacao').click(function(){

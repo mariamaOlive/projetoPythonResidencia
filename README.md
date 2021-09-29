@@ -16,7 +16,7 @@ Funcionalidades do sistema:
 Todas funcionalidade salvam em tempo real um arquivo de leitura e escrita (default: listaClientes.txt)
 
 ## Construido com
-* Python 3.9.7
+* Python 
 * [Flask](https://flask.palletsprojects.com/en/2.0.x/)
 * [Bootstrap 4](https://getbootstrap.com/docs/4.0/)
 
@@ -38,7 +38,7 @@ Você pode configurar o ambiente do programa de duas formas:
     conda activate <nome_environment>
     ```
 
-(Forma 1) Bibliotecas separadas via conda ou pip:
+(Forma 2) Bibliotecas separadas via conda ou pip:
 1. Via conda:
     ```sh
     conda install matplotlib
@@ -71,12 +71,31 @@ Você pode configurar o ambiente do programa de duas formas:
 O arquivo `projetoPython.py` deve ser executado via Flask a partir dos seguintes passos:
 
 1. No diretório do projeto execute os seguites comandos:
+
+    Usuário Mac:
      ```sh
     export FLASK_APP=projetoPython.py
     ```
     ```sh
     flask run
     ```
+
+    Usuário Windows no cmd:
+     ```sh
+    set FLASK_APP=projetoPython
+    ```
+    ```sh
+    flask run
+    ```
+
+    Usuário Windows no PowerShell:
+     ```sh
+    $env:FLASK_APP = "projetoPython"
+    ```
+    ```sh
+    flask run
+    ```
+
 2. Abra em seu browswer o endereço apresentado no terminal (default: `http://127.0.0.1:5000/`)
 
 3. Pronto!
