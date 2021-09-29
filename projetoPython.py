@@ -1,27 +1,13 @@
-from os import path
-from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+import numpy as np
+import matplotlib.pyplot as plt
+import os.path
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify, Response
 from flask_bootstrap import Bootstrap
 import matplotlib
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import numpy as np
 
 
-# Projeto Residencia Python - Operadoras Telefonicas
-# Lucas e Mariama
-
-# chamada1 = {
-#     "dataHora": "23/12/2013",
-#     "numero": "1341234",
-#     "duracao":34
-# }
-
-# chamada2 = {
-#     "dataHora": "23/12/2013",
-#     "numero": "1341234",
-#     "duracao":34
-# }
-
+# Tipos de planos telefonicos
 plano1 = {
     "nome": "top10",
     "minutosChamada": 100,
@@ -38,126 +24,13 @@ plano3 = {
     "gigaInternet": 50
 }
 
+
 dicPlanos = {"top10": plano1, "top20": plano2, "top50": plano3}
 
-cliente1 = {
-    "cpf": "135134",
-    "nome": "Maria Silva",
-    "numero": "41341234",
-    "nascimento": "23/10/1950",
-    "plano": "top50",
-    "saldo": 20,
-    "minutoDisponivel": 100,
-    "internetDisponivel": 4000,
-    "chamadas": ["94313-414"]
-}
+# Função para salvar o dicionario no arquivo (função utilizada em todas as operações que alterem o dicionario)
 
-cliente2 = {
-    "cpf": "111111",
-    "nome": "Gabriel Silva",
-    "numero": "91234134",
-    "nascimento": "23/10/1950",
-    "plano": "top50",
-    "saldo": 20,
-    "minutoDisponivel": 100,
-    "internetDisponivel": 4000,
-    "chamadas": ["4313-414", "4123-4143"]
-}
-
-
-def listarClientes(dicionarioClientes):
-    lista = []
-    for info in dicionarioClientes.values():
-        lista.append(info)
-
-    print(lista)
-    return lista
-
-
-def inserirCliente(dicionarioClientes, cliente):
-    chave = cliente["cpf"]
-    dicionarioClientes[chave] = cliente
-    salvarArquivo(dicionarioClientes)
-    # return Bool
-
-
-# pega os inputs para usar em inserirCliente
-def receberInfoCliente(cpf, nome, numero, dataNascimento, plano, planosDisponiveis):
-    # recebe input com as informações do cliente e devolve um cliente
-    cliente = {
-        "cpf": cpf,
-        "nome": nome,
-        "numero": numero,
-        "nascimento": dataNascimento,
-        "plano": plano,
-        "saldo": 0,
-        "minutoDisponivel": planosDisponiveis[plano]["minutosChamada"],
-        "internetDisponivel": planosDisponiveis[plano]["gigaInternet"],
-        "chamadas": []
-    }
-    return cliente
-
-
-# pega os inputs para usar em inserirCliente
-def lerCliente(cpf, nome, numero, dataNascimento, plano, saldo, minutoDisponivel, internetDisponivel, chamadas):
-    # recebe input com as informações do cliente e devolve um cliente
-    cliente = {
-        "cpf": cpf,
-        "nome": nome,
-        "numero": numero,
-        "nascimento": dataNascimento,
-        "plano": plano,
-        "saldo": saldo,
-        "minutoDisponivel": minutoDisponivel,
-        "internetDisponivel": internetDisponivel,
-        "chamadas": chamadas
-    }
-    return cliente
-
-
-def buscarCliente(dicionarioClientes, cpf):
-    # Busca cliente de acordo com o cpf
-    try:
-        cliente = dicionarioClientes[cpf]
-        return cliente
-    except:
-        return None
-
-
-def atualizaSaldo(dicionarioClientes, cpf, novoSaldo):
-    dicionarioClientes[cpf]["saldo"] = novoSaldo
-    salvarArquivo(dicionarioClientes)
-    # return Bool
-
-
-def adicionarChamada(dicionarioClientes, cpf, chamada):
-    # Adiciona uma nova chamada ao cliente
-    dicionarioClientes[cpf]["chamadas"].append(chamada)
-    salvarArquivo(dicionarioClientes)
-    # return Bool
-
-
-def deletarCliente(dicionarioClientes, cpf):
-    dicionarioClientes.pop(cpf)
-    salvarArquivo(dicionarioClientes)
-    ###
-
-
-def imprimeMenu():
-    print("Menu - Escolha uma opção:")
-    print("1 - Listar clientes")
-    print("2 - Inserir clientes")
-    print("3 - Buscar clientes")
-    print("4 - Atualizar o saldo")
-    print("5 - Adicionar chamada")
-    print("6 - Deletar cliente")
-    #print("7 - Salvar arquivo")
-    print("8 - Gráficos")
-    print("0 - Fim da execução")
-
-
-def salvarArquivo(dicionarioClientes):
-    arquivo = open("listaClientes2.txt", "w")
+def salvarArquivo(dicionarioClientes, nomeArq):
+    arquivo = open(nomeArq, "w")
 
     for info in dicionarioClientes.values():
         stringArquivo = ""
@@ -167,8 +40,8 @@ def salvarArquivo(dicionarioClientes):
         stringArquivo += info["nascimento"]+"\n"
         stringArquivo += info["plano"]+"\n"
         stringArquivo += str(info["saldo"])+"\n"
-        stringArquivo += str(info["minutoDisponivel"])+"\n"
-        stringArquivo += str(info["internetDisponivel"])+"\n"
+        stringArquivo += str(info["minutoConsumido"])+"\n"
+        stringArquivo += str(info["internetConsumida"])+"\n"
         stringArquivo += "[\n"
         for chamada in info["chamadas"]:
             stringArquivo += chamada + "\n"
@@ -178,37 +51,113 @@ def salvarArquivo(dicionarioClientes):
 
     arquivo.close()
 
+# Função para listar todos os clientes do dicionario
+def listarClientes(dicionarioClientes):
+    lista = []
+    for info in dicionarioClientes.values():
+        lista.append(info)
+    return lista
 
-def lerArquivo(dicClientes):
-    arquivo = open("listaClientes2.txt", "r")
-    linhas = arquivo.readlines()
-    cont = 0
+# Função para inserir clientes no dicionario (como em toda operação que altera, ele salva no arquivo também)
+def inserirCliente(dicionarioClientes, cliente):
+    chave = cliente["cpf"]
+    dicionarioClientes[chave] = cliente
+    salvarArquivo(dicionarioClientes, nomeArquivo)
 
-    while cont <= (len(linhas)-1):
-        nome = linhas[cont].strip()
-        cpf = linhas[cont+1].strip()
-        numero = linhas[cont+2].strip()
-        dataNascimento = linhas[cont+3].strip()
-        plano = linhas[cont+4].strip()
-        saldo = linhas[cont+5].strip()
-        minutoDisponivel = linhas[cont+6].strip()
-        internetDisponivel = linhas[cont+7].strip()
-        cont += 9
-        chamadas = []
-        while linhas[cont] != "]\n":
-            chamadas.append(linhas[cont].strip())
+
+# Função para pegar os inputs para usar em inserirCliente
+def receberInfoCliente(cpf, nome, numero, dataNascimento, plano, planosDisponiveis):
+    # recebe input com as informações do cliente e devolve um cliente
+    cliente = {
+        "cpf": cpf,
+        "nome": nome,
+        "numero": numero,
+        "nascimento": dataNascimento,
+        "plano": plano,
+        "saldo": 0,
+        "minutoConsumido": planosDisponiveis[plano]["minutosChamada"],
+        "internetConsumida": planosDisponiveis[plano]["gigaInternet"],
+        "chamadas": []
+    }
+    return cliente
+
+
+# Função para buscar cliente de acordo com o cpf
+def buscarCliente(dicionarioClientes, cpf):
+    try:
+        cliente = dicionarioClientes[cpf]
+        return cliente
+    except:
+        return None
+
+# Função para atualizar o saldo disponível de um cliente de acordo com o cpf
+def atualizaSaldo(dicionarioClientes, cpf, novoSaldo):
+    dicionarioClientes[cpf]["saldo"] = round(float(dicionarioClientes[cpf]["saldo"]) + float(novoSaldo), 2)
+    salvarArquivo(dicionarioClientes, nomeArquivo)
+
+
+# Função para adicionar chamadas realizadas para um cliente de acordo com o cpf
+def adicionarChamada(dicionarioClientes, cpf, chamada):
+    # Adiciona uma nova chamada ao cliente
+    dicionarioClientes[cpf]["chamadas"].append(chamada)
+    salvarArquivo(dicionarioClientes, nomeArquivo)
+
+# Função para deletar um cliente do dicionario e do arquivo de acordo com o cpf
+def deletarCliente(dicionarioClientes, cpf):
+    dicionarioClientes.pop(cpf)
+    salvarArquivo(dicionarioClientes, nomeArquivo)
+
+
+# Função para pegar os inputs para usar em lerArquivo
+def lerCliente(cpf, nome, numero, dataNascimento, plano, saldo, minutoConsumido, internetConsumida, chamadas):
+    # recebe input com as informações do cliente e devolve um cliente
+    cliente = {
+        "cpf": cpf,
+        "nome": nome,
+        "numero": numero,
+        "nascimento": dataNascimento,
+        "plano": plano,
+        "saldo": saldo,
+        "minutoConsumido": minutoConsumido,
+        "internetConsumida": internetConsumida,
+        "chamadas": chamadas
+    }
+    return cliente
+
+# Função para ler o arquivo com as informações dos clientes
+def lerArquivo(dicClientes, nomeArq):
+
+    if os.path.isfile(nomeArq):
+        arquivo = open(nomeArq, "r")
+        linhas = arquivo.readlines()
+        cont = 0
+
+        while cont <= (len(linhas)-1):
+            nome = linhas[cont].strip()
+            cpf = linhas[cont+1].strip()
+            numero = linhas[cont+2].strip()
+            dataNascimento = linhas[cont+3].strip()
+            plano = linhas[cont+4].strip()
+            saldo = linhas[cont+5].strip()
+            minutoConsumido = linhas[cont+6].strip()
+            internetConsumida = linhas[cont+7].strip()
+            cont += 9
+            chamadas = []
+            while linhas[cont] != "]\n":
+                chamadas.append(linhas[cont].strip())
+                cont += 1
             cont += 1
-        cont += 1
 
-        cliente = lerCliente(cpf, nome, numero, dataNascimento, plano,
-                             saldo, minutoDisponivel, internetDisponivel, chamadas)
-        dicClientes[cpf] = cliente
+            cliente = lerCliente(cpf, nome, numero, dataNascimento, plano, saldo, minutoConsumido, internetConsumida, chamadas)
+            dicClientes[cpf] = cliente
 
     return dicClientes
 
+    
+
 # Graficos
 
-
+# Grafico 0: Grafico de barras dos planos telefonicos
 def graficoPlanos(dicionarioClientes, modo):
     plt.clf()
     path = "static/plot0.png"
@@ -237,7 +186,7 @@ def graficoPlanos(dicionarioClientes, modo):
         plt.savefig(path)
     return path
 
-
+# Grafico 1: Grafico de setores dos planos telefonicos
 def graficoPlanosPie(dicionarioClientes, modo):
     plt.clf()
     path = "static/plot1.png"
@@ -266,13 +215,13 @@ def graficoPlanosPie(dicionarioClientes, modo):
         plt.savefig(path)
     return path
 
-
+# Função básica para calcular idade baseada apenas no ano de nascimento
 def calculaIdade(nascimento):
     tam = len(nascimento)
     idade = 2021-int(nascimento[tam-4:tam])
     return idade
 
-
+# Gráfico 2: Grafico de dispersao da idade e saldo disponivel
 def graficoIdadeSaldo(dicionarioClientes, modo):
     plt.clf()
     path = "static/plot2.png"
@@ -292,7 +241,7 @@ def graficoIdadeSaldo(dicionarioClientes, modo):
         plt.savefig(path)
     return path
 
-
+# Grafico 3: Gráfico de barras da quantidade de pessoas por plano e idade
 def graficoPlanosIdade(dicionarioClientes, modo):
     plt.clf()
     path = "static/plot3.png"
@@ -352,7 +301,7 @@ def graficoPlanosIdade(dicionarioClientes, modo):
         plt.savefig(path)
     return path
 
-
+# Grafico 4: Grafico de dispersão de minutos por quantidade de chamadas e saldo
 def graficoMinutosChamadas(dicionarioClientes, modo):
     plt.clf()
     minutos = []
@@ -363,7 +312,7 @@ def graficoMinutosChamadas(dicionarioClientes, modo):
 
     for info in dicionarioClientes.values():
         # nome da var vai mudar para minutoGasto
-        minutos.append(int(info["minutoDisponivel"]))
+        minutos.append(int(info["minutoConsumido"]))
         qtdChamadas.append(len(info["chamadas"]))
         # size referente ao tamanho do caracter
         saldos.append(float(info["saldo"])*size)
@@ -381,48 +330,17 @@ def graficoMinutosChamadas(dicionarioClientes, modo):
     return path
 
 
+# Inicializa o dicionario
 dici = {}
+nomeArquivo = "listaClientes2.txt"
 # dici={cliente1["cpf"]: cliente1}
-lerArquivo(dici)
-# opcao = 99
-# while(opcao !=0):
-#      imprimeMenu()
-#      opcao = int(input())
-#      if(opcao==1):
-#          listarClientes(dici)
-#      elif(opcao==2):
-#          cpf = input("Digite o CPF do cliente:")
-#          nome = input("Digite oo nome do cliente:")
-#          numero = input("Digite oo numero do cliente:")
-#          data = input("Digite a data de nascimento do cliente dd/mm/aaaa: ")
-#          plano = input("Digite o plano do cliente:")
-#          cliente = receberInfoCliente(cpf, nome, numero, data, plano, dicPlanos)
-#          inserirCliente(dici, cliente)
-#      elif(opcao==3):
-#          cpf = input("Digite o CPF do cliente para buscar:")
-#          buscarCliente(dici, cpf)
-#      elif(opcao==4):
-#          cpf = input("Digite o CPF do cliente para atualizar:")
-#          novoSaldo = float(input("Digite o novo saldo:"))
-#          atualizaSaldo(dici, cpf, novoSaldo)
-#      elif(opcao==5):
-#          cpf = input("Digite o CPF do cliente para adicionar a chamada:")
-#          chamada = input("Digite a chamada a ser adicionada:")
-#          adicionarChamada(dici, cpf, chamada)
-#      elif(opcao==6):
-#          cpf = input("Digite o CPF do cliente para deletar:")
-#          deletarCliente(dici, cpf)
-#      #elif(opcao==7):
-#      #    salvarArquivo(dici)
-#      elif(opcao==8):
-#          graficoPlanos(dici, "exibir")
-#          graficoPlanosPie(dici, "exibir")
-#          graficoIdadeSaldo(dici, "exibir")
-#          graficoPlanosIdade(dici, "exibir")
-#          graficoMinutosChamadas(dici, "exibir")
-#      elif(opcao==0):
-#          print("Fim da execução.")
+# pensando em fazer um if para nao ler caso nao tenha arquivo
+lerArquivo(dici, nomeArquivo)
 
+
+######
+# INTERFACE GRAFICA A PARTIR DAQUI
+######
 
 # Variáveis de interface
 infoUsuarioLabels = ["CPF", "Nome", "Plano", "Data de Nascimento", ""]
@@ -440,14 +358,15 @@ def buscarPlanos():
 # Carregamento da interface
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 1
 bootstrap = Bootstrap(app)
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>(1)")
-        print(request.form)
+        #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>(1)")
+        #print(request.form)
 
         opcao = list(request.form.keys())
         if('deletar' in opcao):
@@ -457,8 +376,9 @@ def index():
         else:
             cpf = request.form["cpf"]
             if cpf != "":
-                clienteUnico = [buscarCliente(dici, cpf)] if buscarCliente(dici, cpf)!= None else None
-                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>(2)", clienteUnico)
+                clienteUnico = [buscarCliente(dici, cpf)] if buscarCliente(
+                    dici, cpf) != None else None
+                #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>(2)", clienteUnico)
                 return render_template('index.html', clientes=clienteUnico, planos=buscarPlanos(), usuarioLabel=infoUsuarioLabels)
 
     return render_template('index.html', clientes=listarClientes(dici), planos=buscarPlanos(), usuarioLabel=infoUsuarioLabels)
@@ -477,10 +397,9 @@ def inserir():
     return redirect(url_for('index'))
 
 
-
 @app.route('/alterarSaldo', methods=['POST'])
 def alterarSaldo():
-    print(">>>>>>>>>>>", request.form)
+    #print(">>>>>>>>>>>", request.form)
     cpf = request.form["cpf"]
     novoSaldo = request.form["novoSaldo"]
     atualizaSaldo(dici, cpf, novoSaldo)
@@ -490,7 +409,7 @@ def alterarSaldo():
 
 @app.route('/adicionarChamada', methods=['POST'])
 def inserirChamada():
-    print(">>>>>>>>>>>", request.form)
+    #print(">>>>>>>>>>>", request.form)
     cpf = request.form["cpf"]
     novoNumero = request.form["novoNumero"]
     adicionarChamada(dici, cpf, novoNumero)
@@ -501,21 +420,21 @@ def inserirChamada():
 @app.route("/ajaxfile", methods=["POST", "GET"])
 def ajaxfile():
     if request.method == 'POST':
-        print(">>>>>>>>>>>", request.form)
+        #print(">>>>>>>>>>>", request.form)
         cpf = request.form['cpf']
         tipoAcao = request.form['tipoAcao']
-        print(cpf)
+        #print(cpf)
     return jsonify({'htmlresponse': render_template('modal.html', cpf=cpf, tipoAcao=tipoAcao)})
 
 
 @app.route("/ajaxfilevisualizacao", methods=["POST", "GET"])
 def ajaxfilevisualizacao():
     if request.method == 'POST':
+
         print(">>>>>>>>>>>", request.form)
         visType = request.form['vis']
         imagem = ""
         if(visType == "vis1"):
-            #graficoPlanosPie(dici, "exibir")
             image = graficoPlanosPie(dici, "salvar")
         elif (visType == "vis2"):
             #graficoIdadeSaldo(dici, "exibir")
@@ -526,12 +445,32 @@ def ajaxfilevisualizacao():
         else:
             #graficoMinutosChamadas(dici, "exibir")
             image = graficoMinutosChamadas(dici, "salvar")
-        print(">>>>>>>>>>>>>>",image)
+        print(">>>>>>>>>>>>>>", image)
+
     return jsonify({'htmlresponse': render_template('modalVisualizacao.html', imagem=image)})
 
 
-#          graficoPlanos(dici, "exibir")
-#          graficoPlanosPie(dici, "exibir")
-#          graficoIdadeSaldo(dici, "exibir")
-#          graficoPlanosIdade(dici, "exibir")
-#          graficoMinutosChamadas(dici, "exibir")
+@app.after_request
+def add_header(r):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers['Cache-Control'] = 'public, max-age=0'
+    return r
+
+
+"""
+@app.after_request
+def add_header(response):
+    # response.cache_control.no_store = True
+
+    print(">>>>>>>>>>>>>>>>>>5")
+    if 'Cache-Control' not in response.headers:
+        print(">>>>>>>>>>>>>>>>>>6")
+        response.headers['Cache-Control'] = 'no-store'
+    return response
+"""
