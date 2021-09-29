@@ -24,7 +24,7 @@ Você pode configurar o ambiente do programa de duas formas:
 * importar conda emviroment
 * via pip instalar cada biblioteca separadamente
 
-## Instalação
+### Instalação
 
 Inportar conda environment:
 1. Utilize o arquivo `requirements.yml` para importar o environment conda
@@ -65,7 +65,7 @@ Bibliotecas separadas via conda ou pip:
     pip install bootstrap-4
     ```
 
-## Executando o programa
+### Executando o programa
 O arquivo `projetoPython.py` deve ser executado via Flask a partir dos seguintes passos:
 
 1. No diretório do projeto execute os seguites comandos:
