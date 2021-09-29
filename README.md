@@ -16,7 +16,7 @@ Funcionalidades do sistema:
 Todas funcionalidade salvam em tempo real um arquivo de leitura e escrita (default: listaClientes.txt)
 
 ## Construido com
-* Python 3.9.7
+* Python 
 * [Flask](https://flask.palletsprojects.com/en/2.0.x/)
 * [Bootstrap 4](https://getbootstrap.com/docs/4.0/)
 
