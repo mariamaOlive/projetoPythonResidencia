@@ -88,7 +88,7 @@ O arquivo `projetoPython.py` deve ser executado via Flask a partir dos seguintes
     flask run
     ```
 
-    Usuário Windows no cmd:
+    Usuário Windows no PowerShell:
      ```sh
     $env:FLASK_APP = "projetoPython"
     ```
