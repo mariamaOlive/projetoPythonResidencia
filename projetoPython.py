@@ -1,4 +1,3 @@
-#import numpy as np
 import matplotlib.pyplot as plt
 import os.path
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify, Response
@@ -45,6 +44,22 @@ def salvarArquivo(dicionarioClientes, nomeArq):
         arquivo.write(stringArquivo)
 
     arquivo.close()
+
+# Função para pegar os inputs para usar em lerArquivo
+def lerCliente(cpf, nome, numero, dataNascimento, plano, saldo, minutoConsumido, internetConsumida, chamadas):
+    # recebe input com as informações do cliente e devolve um cliente
+    cliente = {
+        "cpf": cpf,
+        "nome": nome,
+        "numero": numero,
+        "nascimento": dataNascimento,
+        "plano": plano,
+        "saldo": saldo,
+        "minutoConsumido": minutoConsumido,
+        "internetConsumida": internetConsumida,
+        "chamadas": chamadas
+    }
+    return cliente
 
 # Função para ler o arquivo com as informações dos clientes
 def lerArquivo(dicClientes, nomeArq):
@@ -130,21 +145,7 @@ def deletarCliente(dicionarioClientes, cpf):
     salvarArquivo(dicionarioClientes, nomeArquivo)
 
 
-# Função para pegar os inputs para usar em lerArquivo
-def lerCliente(cpf, nome, numero, dataNascimento, plano, saldo, minutoConsumido, internetConsumida, chamadas):
-    # recebe input com as informações do cliente e devolve um cliente
-    cliente = {
-        "cpf": cpf,
-        "nome": nome,
-        "numero": numero,
-        "nascimento": dataNascimento,
-        "plano": plano,
-        "saldo": saldo,
-        "minutoConsumido": minutoConsumido,
-        "internetConsumida": internetConsumida,
-        "chamadas": chamadas
-    }
-    return cliente
+
 
 
     
