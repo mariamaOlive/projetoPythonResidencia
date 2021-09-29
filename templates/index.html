@@ -42,6 +42,7 @@
 
 {# Lista de clientes #}
 <div>
+   {% if clientes != None %}
     <div  class="container mb-2">
         <div class="row">
             {% for label in usuarioLabel %}
@@ -51,86 +52,95 @@
             {% endfor %} 
         </div>
     </div>
+
+ 
     {% for cliente in clientes %}
         <div id="accordion">
-        <div class="card mb-1" >
-            <div class="card-header" id="headingOne">
-            <h5 class="mb-0">
-                <div class="" data-toggle="collapse" data-target="#{{cliente.cpf}}" aria-expanded="true" aria-controls="{{cliente.cpf}}">
-                    <div  class="container">
-                        <div class="row">
-                            <div class="col-sm">
-                                {{ cliente.cpf }}
-                            </div>
-                            <div class="col-sm">
-                                {{ cliente.nome }}
-                            </div>
-                            <div class="col-sm">
-                                {{ cliente.plano }}
-                            </div>
-                            <div class="col-sm">
-                                {{ cliente.nascimento }}
-                            </div>
-                            <div class="col-sm">
-                                <form action='/' , method='POST'>
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Opções
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                            <button class="dropdown-item" type="submit" name="deletar" value="{{cliente.cpf}}" onclick="event.stopPropagation();">Deletar</button>
-                                            <button class="dropdown-item adicionarSaldo" type="button" name="adicionarSaldo" value="{{cliente.cpf}}" onclick="event.stopPropagation();">Adicionar saldo</button>
-                                            <button class="dropdown-item adicionarChamada" type="button" name="adicionarChamada" value="{{cliente.cpf}}" onclick="event.stopPropagation();" >Adicionar chamada</button>
-                                        </div>
+            <div class="card mb-1" >
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <div class="" data-toggle="collapse" data-target="#{{cliente.cpf}}" aria-expanded="true" aria-controls="{{cliente.cpf}}">
+                            <div  class="container">
+                                <div class="row">
+                                    <div class="col-sm">
+                                        {{ cliente.cpf }}
                                     </div>
-                                </form>
+                                    <div class="col-sm">
+                                        {{ cliente.nome }}
+                                    </div>
+                                    <div class="col-sm">
+                                        {{ cliente.plano }}
+                                    </div>
+                                    <div class="col-sm">
+                                        {{ cliente.nascimento }}
+                                    </div>
+                                    <div class="col-sm">
+                                        <form action='/' , method='POST'>
+                                            <div class="dropdown">
+                                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Opções
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                                    <button class="dropdown-item" type="submit" name="deletar" value="{{cliente.cpf}}" onclick="event.stopPropagation();">Deletar</button>
+                                                    <button class="dropdown-item adicionarSaldo" type="button" name="adicionarSaldo" value="{{cliente.cpf}}" onclick="event.stopPropagation();">Adicionar saldo</button>
+                                                    <button class="dropdown-item adicionarChamada" type="button" name="adicionarChamada" value="{{cliente.cpf}}" onclick="event.stopPropagation();" >Adicionar chamada</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+                    </h5>
+                </div>
+
+        {# Informação cliente detalhada #}
+        <div id="{{cliente.cpf}}" class="collapse" aria-labelledby="heading{{cliente.cpf}}" data-parent="#accordion">
+        <div class="card-body">
+            <div  class="container">
+                    <div class="row mb-3">
+                        <div class="col-sm">
+                            Saldo: {{ cliente.saldo }}
+                        </div>
+                        <div class="col-sm">
+                           
                         </div>
                     </div>
-                </div>
-            </h5>
-            </div>
-
-            {# Card escondido de informação do cliente #}
-            <div id="{{cliente.cpf}}" class="collapse" aria-labelledby="heading{{cliente.cpf}}" data-parent="#accordion">
-            <div class="card-body">
-                <div  class="container">
-                        <div class="row mb-3">
-                            <div class="col-sm">
-                                Saldo: {{ cliente.saldo }}
-                            </div>
-                            <div class="col-sm">
-                            
-                            </div>
+                    <div class="row mb-3">
+                        <div class="col-sm">
+                             Minutos disponíveis: {{ cliente.minutoDisponivel }} min
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-sm">
-                                Minutos disponíveis: {{ cliente.minutoDisponivel }} min
-                            </div>
-                            <div class="col-sm">
-                                Internet disponível: {{ cliente.internetDisponivel }} GB
-                            </div>
+                        <div class="col-sm">
+                            Internet disponível: {{ cliente.internetDisponivel }} GB
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-sm">
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm">
+                            <div>
+                                Chamadas realizadas:
+                            </div>
+                            {% for chamada in cliente.chamadas %}
                                 <div>
-                                    Chamadas realizadas:
+                                    {{chamada}}
                                 </div>
-                                {% for chamada in cliente.chamadas %}
-                                    <div>
-                                        {{chamada}}
-                                    </div>
-                                {% endfor %} 
-                            </div>
-                            <div class="col-sm">
-                            </div>
+                            {% endfor %} 
+                        </div>
+                        <div class="col-sm">
+                      
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    {% endfor %} 
+    </div>
+{% endfor %}
+{% else %}
+    <div class="container mb-2">
+        Nunhum cliente encontrado!
+    </div>
+{% endif %}
 </div>
+
 
 
 

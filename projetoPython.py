@@ -121,7 +121,7 @@ def buscarCliente(dicionarioClientes, cpf):
         cliente = dicionarioClientes[cpf]
         return cliente
     except:
-        return []
+        return None
 
 
 def atualizaSaldo(dicionarioClientes, cpf, novoSaldo):
@@ -450,14 +450,15 @@ def index():
         print(request.form)
 
         opcao = list(request.form.keys())
-        if('deletar' in opcao or 'adicionarSaldo' in opcao or 'adicionarChamada' in opcao):
+        if('deletar' in opcao):
             if(opcao[0] == 'deletar'):
                 deletarCliente(dici, request.form['deletar'])
 
         else:
             cpf = request.form["cpf"]
             if cpf != "":
-                clienteUnico = [buscarCliente(dici, cpf)]
+                clienteUnico = [buscarCliente(dici, cpf)] if buscarCliente(dici, cpf)!= None else None
+                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>(2)", clienteUnico)
                 return render_template('index.html', clientes=clienteUnico, planos=buscarPlanos(), usuarioLabel=infoUsuarioLabels)
 
     return render_template('index.html', clientes=listarClientes(dici), planos=buscarPlanos(), usuarioLabel=infoUsuarioLabels)
@@ -475,11 +476,6 @@ def inserir():
     inserirCliente(dici, cliente)
     return redirect(url_for('index'))
 
-
-@app.route('/alterarCliente', methods=['POST'])
-def alterar():
-    print(request.form["cpf"])
-    return redirect(url_for('index'))
 
 
 @app.route('/alterarSaldo', methods=['POST'])
